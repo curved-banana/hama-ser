@@ -96,6 +96,7 @@ public class UserController {
         return code;
     }
 
+    //전체 회원 조회
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAll(){
 
@@ -103,6 +104,13 @@ public class UserController {
 
     }
 
+    //회원 한명 조회
+    @GetMapping("/user")
+    public ResponseEntity<User> findOneUser(@RequestParam(value = "email") String email){
+        return new ResponseEntity<>(userService.findUserOne(email), HttpStatus.OK);
+    }
+
+    //회원정보 수정
     @PostMapping("/user/{email}/update")
     public void updateUser(@PathVariable String email, @RequestBody SignRequest request){
 
@@ -110,14 +118,10 @@ public class UserController {
 
     }
 
+    //회원 삭제
     @GetMapping("/user/delete")
     public void delete(@RequestParam(value="email") String email){
         userService.deleteUser(email);
-    }
-
-    @GetMapping("/fcm")
-    public String getAccessToken() throws IOException {
-        return null;
     }
 
 }

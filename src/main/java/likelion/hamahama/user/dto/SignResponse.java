@@ -18,7 +18,6 @@ public class SignResponse {
     private String nickname;
     private String password;
     private String email;
-    private String phoneNum;
     private List<String> role;
     private String accessToken;
     private String refreshToken;

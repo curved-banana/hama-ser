@@ -29,10 +29,9 @@ public class UserService {
     }
 
     public User findUserOne(String email){
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new BadCredentialsException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+        Optional<User> user = userRepository.findByEmail(email);
 
-        return user;
+        return user.get();
     }
 
     public void updateUser(String email, SignRequest request){
