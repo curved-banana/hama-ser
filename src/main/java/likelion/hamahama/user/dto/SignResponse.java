@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 public class SignResponse {
     private Long id;
-    private String name;
     private String nickname;
     private String password;
     private String email;
@@ -26,7 +25,6 @@ public class SignResponse {
 
     public SignResponse(User user){
         this.id = user.getId();
-        this.name = user.getName();
         this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.email = user.getEmail();

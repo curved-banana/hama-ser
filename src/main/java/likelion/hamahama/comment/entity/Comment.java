@@ -17,14 +17,15 @@ import javax.persistence.*;
 @Builder
 public class Comment {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "coupon_id", referencedColumnName = "coupon_id")
     private Coupon coupon;
 
