@@ -1,5 +1,6 @@
 package likelion.hamahama.coupon.repository;
 
+import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.enums.Category;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,10 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     //===== 쿠폰이 속한 카테고리로 쿠폰 찾는 메서드
     Page<Coupon> findByCategory(Category category, Pageable pageable);
+
+    /** 추가 브랜드 쿠폰 찾는 메서드 */
+    Page<Coupon> findByBrand(Brand brand, Pageable pageable);
+    Page<Coupon> findAllByBrand(long brandId, Pageable pageable);
 
     // ========= 쿠폰 이름에 포함된 키워드 찾는 메서드
     Page<Coupon> findByCouponNameContaining(String searchKeyword, Pageable pageable);

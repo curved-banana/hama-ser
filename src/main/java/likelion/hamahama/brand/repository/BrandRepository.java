@@ -15,4 +15,8 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
     Optional<Brand> findByName(String name);
     Brand findByBrandName(String theName);
+
+    //Optional<BrandLike> findByUserAndBrand(User user, Brand brand);
+
+
 }

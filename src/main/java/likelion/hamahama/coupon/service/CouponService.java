@@ -33,10 +33,10 @@ public class CouponService {
         return couponRepository.findAll();
     }
 
-    // 카테고리 기반으로 모든 쿠폰 찾기
-    public List<Coupon> findAll_coupon_category(Category theCategory) {
-        return couponRepository.findAllByCategory(theCategory);
-    }
+//    // 카테고리 기반으로 모든 쿠폰 찾기
+//    public List<Coupon> findAll_coupon_category(Category theCategory) {
+//        return couponRepository.findAllByCategory(theCategory);
+//    }
 
     // 쿠폰 ID 기반으로 쿠폰 찾기
     public Coupon findCouponById(long theId) {
@@ -92,7 +92,7 @@ public class CouponService {
 
 
    // ==============================================
-    // 게시글 리스트 처리
+    // 쿠폰 리스트 처리
     public Page<Coupon> couponList(Pageable pageable){
         return couponRepository.findAll(pageable);
     }
@@ -101,18 +101,15 @@ public class CouponService {
         return couponRepository.findByCouponNameContaining(searchKeyWord,pageable);
     }
 
-
-    private static final int PAGE_COUPON_COUNT = 9;
-
-    //컨트롤러에서 넘겨받은 카테고리 및 정렬 기준으로 게시물 페이징 객체 반환
-   //@Override
-    public Page<CouponDetailDto> getCouponList(Pageable pageable, int pageNo, Category category, String orderCriteria) {
-        pageable = PageRequest.of(pageNo, PAGE_COUPON_COUNT, Sort.by(Sort.Direction.DESC, orderCriteria));
-        Page<Coupon> couponPage = couponRepository.findByCategory(category, pageable);
-        Page<CouponDetailDto> result = couponPage.map((p -> new CouponDetailDto(p)));
-        return result;
+    //========== 브랜드별 쿠폰 리스트 출력
+//    public Page<Coupon> findCouponByBrand(Brand brand, Pageable pageable){
+//        return couponRepository.findByBrand(brand,pageable);
+//    }
+    @Transactional
+    public Page<CouponDetailDto> findCouponByBrand(long brandId, Pageable pageable){
+        Page<Coupon> brandCoupons = couponRepository.findAllByBrand(brandId, pageable);
+        return (Page<CouponDetailDto>) brandCoupons.stream().map(c -> new CouponDetailDto(c));
     }
-
 
     /** 메인페이지에서 보이는 인기순/신규순 쿠폰들 */
     private static final int PAGE_COUPON_COUNTING = 6;
@@ -120,9 +117,24 @@ public class CouponService {
     public Page<CouponDetailDto> couponListBy (Pageable pageable, int pageNo, String orderCriteria){
         pageable = PageRequest.of(pageNo, PAGE_COUPON_COUNTING, Sort.by(Sort.Direction.DESC, orderCriteria));
         Page<Coupon> couponPage = couponRepository.findAll(pageable);
-        Page<CouponDetailDto> couponDetailDtos = couponPage.map((p -> new CouponDetailDto(p)));
+        Page<CouponDetailDto> couponDetailDtos = couponPage.map((c -> new CouponDetailDto(c)));
         return couponDetailDtos;
     }
+
+//    private static final int PAGE_COUPON_COUNT = 9;
+//
+//    //컨트롤러에서 넘겨받은 카테고리 및 정렬 기준으로 게시물 페이징 객체 반환
+//   //@Override
+//    public Page<CouponDetailDto> getCouponList(Pageable pageable, int pageNo, Category category, String orderCriteria) {
+//        pageable = PageRequest.of(pageNo, PAGE_COUPON_COUNT, Sort.by(Sort.Direction.DESC, orderCriteria));
+//        Page<Coupon> couponPage = couponRepository.findByCategory(category, pageable);
+//        Page<CouponDetailDto> result = couponPage.map((c -> new CouponDetailDto(c)));
+//        return result;
+//    }
+
+
+
+
 }
 
 

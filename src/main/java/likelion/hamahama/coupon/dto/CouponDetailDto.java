@@ -1,5 +1,6 @@
 package likelion.hamahama.coupon.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.Coupon;
 import lombok.Data;
@@ -12,7 +13,9 @@ public class CouponDetailDto {
     private Long couponId;
     private String couponName;
     private Brand brand;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     // private Boolean isLiked;  즐겨찾기된 쿠폰

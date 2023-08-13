@@ -2,8 +2,13 @@ package likelion.hamahama.brand.service;
 
 import likelion.hamahama.brand.dto.BrandDto;
 import likelion.hamahama.brand.entity.Brand;
+import likelion.hamahama.brand.entity.BrandLike;
+import likelion.hamahama.brand.repository.BrandLikeRepsitory;
 import likelion.hamahama.brand.repository.BrandRepository;
 import likelion.hamahama.coupon.repository.CouponRepository;
+import likelion.hamahama.user.entity.User;
+import likelion.hamahama.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,12 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BrandService {
     @Autowired
     private CouponRepository couponRepository;
 
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BrandLikeRepsitory brandLikeRepsitory;
 
     public List<Brand> findAll_brand(){
         return brandRepository.findAll();
@@ -53,4 +65,20 @@ public class BrandService {
     public void deleteById(long theId){
         brandRepository.deleteById(theId);
     }
+
+    //===============================
+    // 브랜드 즐겨찾기
+    @Transactional
+    public void createBrandFavorite(User user, Brand brand){
+        BrandLike createdBrandLike = new BrandLike(user, brand);
+        brandLikeRepsitory.save(createdBrandLike);
+    }
+    @Transactional
+    public void deleteBrandFavorite(User user, Brand brand){
+        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user,brand);
+        brandLike.disLike();
+        brandLikeRepsitory.delete(brandLike);
+
+    }
+
 }

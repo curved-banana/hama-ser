@@ -3,7 +3,9 @@ package likelion.hamahama.brand.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import likelion.hamahama.coupon.entity.Coupon;
+import likelion.hamahama.coupon.entity.CouponLike;
 import likelion.hamahama.coupon.entity.enums.Category;
+import likelion.hamahama.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,8 +48,15 @@ public class Brand {
     @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     private List<Coupon> coupons;
 
+    /**추가*/
+    @OneToMany(
+            mappedBy = "coupon",
+            cascade =  CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<BrandLike> likeUsers = new ArrayList<>();
+    /**========================*/
     public Brand(){
-
     }
 
     public Brand(Category category, String brandName, String brandImgUrl) {
@@ -55,13 +64,15 @@ public class Brand {
         this.brandName = brandName;
         this.brandImgUrl = brandImgUrl;
     }
-//    @Builder
-//    public Brand(long brandId, Category category, String brandName, String brandImgUrl) {
-//        this.Id = brandId;
-//        this.category = category;
-//        this.brandName = brandName;
-//        this.brandImgUrl = brandImgUrl;
-//    }
+    /** (추가) 즐겨찾기 상태 변화 */
+    public void updateFavoriteStatus(){
+        if(!likeUsers.isEmpty()){
+            favoriteStatus = true;
+        } else{
+            favoriteStatus = false;
+        }
+    }
+
 
 
 }

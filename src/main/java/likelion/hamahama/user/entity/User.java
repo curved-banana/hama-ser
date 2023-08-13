@@ -1,6 +1,7 @@
 package likelion.hamahama.user.entity;
 
 
+import likelion.hamahama.brand.entity.BrandLike;
 import likelion.hamahama.coupon.entity.CouponLike;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -60,4 +61,11 @@ public class User extends BaseTimeEntity {
     )
     private List<CouponLike> likeCoupons = new ArrayList<>();
 
+/**추가 */
+    @OneToMany(
+            mappedBy ="user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<BrandLike> likeBrand = new ArrayList<>();
 }
