@@ -47,13 +47,6 @@ public class UserController {
 
     private final HttpSession httpSession;
 
-
-    @GetMapping("/hello-world")
-    public @ResponseBody String hello(){
-
-        return "Hello World!";
-    }
-
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam(value="code")String code, HttpServletResponse response) throws Exception {
 
@@ -80,20 +73,28 @@ public class UserController {
         return new ResponseEntity<>(loginService.login(request, response), HttpStatus.OK);
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("user/reissue")
     public ResponseEntity<String> reissueAccessToken(@RequestHeader("refresh-token") String bearerToken){
         String new_accessToken = loginService.reissueAccessToken(bearerToken);
         return new ResponseEntity<>(new_accessToken, HttpStatus.OK);
     }
 
 
-    @PostMapping("/login/mailConfirm")
-    public @ResponseBody String mailConfirm(@RequestParam(value = "email") String email) throws Exception{
+    //회원가입 시 이메일 인증코드 받기
+    @PostMapping("user/register/mailConfirm")
+    public @ResponseBody String mailConfirm(@RequestBody SignRequest request) throws Exception{
 
-        String code = registerMail.sendSimpleMessage(email);
+        String code = registerMail.sendReceiveCodeMessage(request.getEmail());
         System.out.println("인증코드 : " + code);
 
         return code;
+    }
+
+    //이메일로 비밀번호 변경 url 받기
+    @PostMapping("/user/resetPassword")
+    public void resetPassword(@RequestBody SignRequest request) throws Exception{
+        registerMail.sendPasswordResetUrl(request.getEmail());
+
     }
 
     //전체 회원 조회

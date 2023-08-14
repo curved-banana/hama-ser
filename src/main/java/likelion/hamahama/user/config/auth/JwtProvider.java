@@ -1,5 +1,7 @@
 package likelion.hamahama.user.config.auth;
 
+import com.google.firebase.auth.UserInfo;
+import likelion.hamahama.user.entity.Role;
 import likelion.hamahama.user.repository.RefreshTokenRepository;
 import likelion.hamahama.user.repository.UserRepository;
 import io.jsonwebtoken.*;
@@ -30,9 +32,9 @@ public class JwtProvider {
     private String secretKey;
 
     // 어세스 토큰 유효시간 | 1시간
-    private long accessTokenValidTime = 1 * 60 * 1000L; // 30 * 60 * 1000L;
+    private long accessTokenValidTime = 2 * 60 * 60 * 1000L; // 30 * 60 * 1000L;
     // 리프레시 토큰 유효시간 | 1일
-    private long refreshTokenValidTime = 50 * 60 * 1000L;
+    private long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L;
 
     @Autowired
     private final UserInfoUserDetailsService userInfoUserDetailsService;
@@ -40,6 +42,7 @@ public class JwtProvider {
     private final RefreshTokenRepository refreshTokenRepository;
     @Autowired
     private final UserRepository userRepository;
+
 
 
     // 의존성 주입 후, 초기화를 수행
@@ -50,18 +53,18 @@ public class JwtProvider {
     }
 
     // Access Token 생성.
-    public String createAccessToken(String email, List<String> roles){
-        return this.createToken(email, roles, accessTokenValidTime);
+    public String createAccessToken(String email, Role role){
+        return this.createToken(email, role, accessTokenValidTime);
     }
     // Refresh Token 생성.
-    public String createRefreshToken(String email, List<String> roles) {
-        return this.createToken(email, roles, refreshTokenValidTime);
+    public String createRefreshToken(String email, Role role) {
+        return this.createToken(email, role, refreshTokenValidTime);
     }
 
     // Create token
-    public String createToken(String email,List<String> roles, long tokenValid) {
+    public String createToken(String email,Role role, long tokenValid) {
         Claims claims = Jwts.claims().setSubject(email); // claims 생성 및 payload 설정
-        claims.put("roles", roles); // 권한 설정, key/ value 쌍으로 저장
+        claims.put("roles", role); // 권한 설정, key/ value 쌍으로 저장
         Date date = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 발행 유저 정보 저장
@@ -74,7 +77,8 @@ public class JwtProvider {
     // JWT 에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userInfoUserDetailsService.loadUserByUsername(this.getUserEmail(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        System.out.println("설정된 권한은 " + userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     // 토큰에서 회원 정보 추출
@@ -134,8 +138,8 @@ public class JwtProvider {
     }
 
     // Email로 권한 정보 가져오기
-    public List<String> getRoles(String email) {
-        return userRepository.findByEmail(email).get().getRoles();
+    public Role getRoles(String email) {
+        return userRepository.findByEmail(email).get().getRole();
     }
 
     public Claims parseClaimsFromRefreshToken(String jsonWebToken){

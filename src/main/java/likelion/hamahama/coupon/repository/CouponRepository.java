@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +26,18 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findAll(Pageable pageable);
     Page<Coupon> findByLikeCount(Integer likeCount, Pageable pageable);
 
-    //태현
-    Coupon findById(long theId);
 
     @Query("SELECT u FROM Coupon u WHERE u.brand.id = :data")
     List<Coupon> findAllByBrandId(@Param("data") long theId);
 
     List<Coupon> findAll();
 
-    Optional<Coupon> findByCouponName(String theName);
+    Optional<Coupon> findById(Long couponId);
+
+
+    //boolean existsById(Long couponId);
+    boolean existsById(Long couponId);
+
 
     Coupon findByCouponNameAndBrand_brandName(String couponName, String brandName);
 

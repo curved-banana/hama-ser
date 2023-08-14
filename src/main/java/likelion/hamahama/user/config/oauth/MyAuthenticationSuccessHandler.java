@@ -2,6 +2,7 @@ package likelion.hamahama.user.config.oauth;
 
 import likelion.hamahama.user.config.auth.JwtProvider;
 import likelion.hamahama.user.entity.RefreshToken;
+import likelion.hamahama.user.entity.Role;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.RefreshTokenRepository;
 import likelion.hamahama.user.repository.UserRepository;
@@ -74,8 +75,8 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         //authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(oAuth2User.getAttribute("email"), oAuth2User.getAttribute("password")));
         if (authentication.isAuthenticated()) {
             //RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getUsername());
-            String accessToken = jwtProvider.createAccessToken(email, roles);
-            String refreshToken = jwtProvider.createRefreshToken(email, roles);
+            String accessToken = jwtProvider.createAccessToken(email, Role.ROLE_USER);
+            String refreshToken = jwtProvider.createRefreshToken(email, Role.ROLE_USER);
             jwtProvider.setHeaderAccessToken(response, accessToken);
             jwtProvider.setHeaderRefreshToken(response, refreshToken);
 
