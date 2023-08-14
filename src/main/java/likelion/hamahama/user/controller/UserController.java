@@ -48,12 +48,6 @@ public class UserController {
     private final HttpSession httpSession;
 
 
-    @GetMapping("/hello-world")
-    public @ResponseBody String hello(){
-
-        return "Hello World!";
-    }
-
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam(value="code")String code, HttpServletResponse response) throws Exception {
 
@@ -69,25 +63,25 @@ public class UserController {
         //return new ResponseEntity<>(kakaoLoginService.createKakaoUser(tokenDTO.getAccessToken(), tokenDTO.getRefreshToken()), HttpStatus.OK)
         return redirectView;
     }
-    @PostMapping("/register")
+    @PostMapping("user/register")
     public ResponseEntity<Boolean> signup(@RequestBody SignRequest signRequest) throws Exception {
         return new ResponseEntity<>(loginService.register(signRequest), HttpStatus.OK);
     }
 
-    @PostMapping("/login")
+    @PostMapping("user/login")
     public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request, HttpServletResponse response) throws Exception {
         System.out.println(response);
         return new ResponseEntity<>(loginService.login(request, response), HttpStatus.OK);
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("user/reissue")
     public ResponseEntity<String> reissueAccessToken(@RequestHeader("refresh-token") String bearerToken){
         String new_accessToken = loginService.reissueAccessToken(bearerToken);
         return new ResponseEntity<>(new_accessToken, HttpStatus.OK);
     }
 
 
-    @PostMapping("/login/mailConfirm")
+    @PostMapping("user/register/mailConfirm")
     public @ResponseBody String mailConfirm(@RequestParam(value = "email") String email) throws Exception{
 
         String code = registerMail.sendSimpleMessage(email);
@@ -96,6 +90,17 @@ public class UserController {
         return code;
     }
 
+<<<<<<< HEAD
+=======
+
+//    @GetMapping("/users")
+//    public ResponseEntity<List<User>> findAll(){
+//
+//        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+//
+//    }
+
+>>>>>>> a2cfa3138f6d7e5a3191f1488a30120c060c1b31
     //전체 회원 조회
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAll(){
@@ -124,4 +129,8 @@ public class UserController {
         userService.deleteUser(email);
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a2cfa3138f6d7e5a3191f1488a30120c060c1b31
 }

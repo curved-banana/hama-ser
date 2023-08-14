@@ -33,10 +33,10 @@ public class BrandDto {
         this.brandImgUrl = brand.getBrandImgUrl();
         this.favoirteStatus = brand.isFavoriteStatus();
     }
-//    public BrandDto(String brandName, String brandImgUrl) {
-//        this.brandName = brandName;
-//        this.brandImgUrl = brandImgUrl;
-//    }
+    public BrandDto(String brandName, String brandImgUrl) {
+        this.brandName = brandName;
+        this.brandImgUrl = brandImgUrl;
+    }
 
 
 }

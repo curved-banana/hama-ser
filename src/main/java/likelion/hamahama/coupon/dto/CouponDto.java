@@ -1,5 +1,6 @@
 package likelion.hamahama.coupon.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.enums.Category;
@@ -20,7 +21,9 @@ public class CouponDto {
     private String couponName;
     private String couponCode;
     private String couponUrl;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private String description;
     private int likeCount;
