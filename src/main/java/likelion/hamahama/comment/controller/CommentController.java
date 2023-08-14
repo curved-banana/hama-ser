@@ -38,17 +38,18 @@ public class CommentController {
                                                  Pageable pageable) {
         return commentService.commentListBy(pageable,orderCriteria);
     }
+
     @GetMapping("/list")
     public Page<CommentRequestDto> commentList(Pageable pageable){
         return commentService.findAllComment(pageable);
     }
 
-    // 한 쿠폰에 대한 댓글 목록들
-    @GetMapping("/coupon/comments")
-    public Page<CommentRequestDto> getCommentsByCouponId(@RequestParam Long couponId, Pageable pageable){
-        Page<CommentRequestDto> comments = commentService.findAllComment(couponId,pageable);
-        return comments;
-    }
+//    // 한 쿠폰에 대한 댓글 목록들
+//    @GetMapping("/coupon/comments")
+//    public Page<CommentRequestDto> getCommentsByCouponId(@RequestParam Long couponId, Pageable pageable){
+//        Page<CommentRequestDto> comments = commentService.findAllComment(couponId,pageable);
+//        return comments;
+//    }
 
 //    @PostMapping("/update")
 //    public void updateComment(@RequestBody CommentResponse request){
