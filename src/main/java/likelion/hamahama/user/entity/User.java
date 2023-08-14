@@ -24,11 +24,9 @@ public class User extends BaseTimeEntity {
     @Column(name="user_id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @Column(name = "nickname", nullable = true, unique = true)
     private String nickname;
+
 
     @Column(name = "email", nullable = true, unique = true)
     private String email;
@@ -48,12 +46,6 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    public User update(String name, String email){
-        this.name = name;
-        this.email = email;
-
-        return this;
-    }
     @OneToMany(
             mappedBy ="user",
             cascade = CascadeType.ALL,

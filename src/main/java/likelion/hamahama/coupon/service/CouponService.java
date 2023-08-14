@@ -2,6 +2,8 @@ package likelion.hamahama.coupon.service;
 
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.brand.repository.BrandRepository;
+import likelion.hamahama.comment.entity.Comment;
+import likelion.hamahama.comment.repository.CommentRepository;
 import likelion.hamahama.coupon.dto.CouponDetailDto;
 import likelion.hamahama.coupon.dto.CouponDto;
 import likelion.hamahama.coupon.entity.Coupon;
@@ -22,6 +24,7 @@ import java.util.List;
 public class CouponService {
     private final CouponRepository couponRepository;
     private final BrandRepository brandRepository;
+    private final CommentRepository commentRepository;
 
     // 브랜드 ID 기반으로 브랜드 찾기
     public Brand findBrandByName(String theName) {
@@ -33,7 +36,7 @@ public class CouponService {
         return couponRepository.findAll();
     }
 
-//    // 카테고리 기반으로 모든 쿠폰 찾기
+    // 카테고리 기반으로 모든 쿠폰 찾기
 //    public List<Coupon> findAll_coupon_category(Category theCategory) {
 //        return couponRepository.findAllByCategory(theCategory);
 //    }
@@ -111,26 +114,18 @@ public class CouponService {
         return (Page<CouponDetailDto>) brandCoupons.stream().map(c -> new CouponDetailDto(c));
     }
 
-    /** 메인페이지에서 보이는 인기순/신규순 쿠폰들 */
+    /** 메인페이지에서 보이는 인기순/신규순 쿠폰들  */
+    /** 수정 완료 */
     private static final int PAGE_COUPON_COUNTING = 6;
+    private static final int FIRST_PAGE = 0;
 
-    public Page<CouponDetailDto> couponListBy (Pageable pageable, int pageNo, String orderCriteria){
-        pageable = PageRequest.of(pageNo, PAGE_COUPON_COUNTING, Sort.by(Sort.Direction.DESC, orderCriteria));
+    public Page<CouponDetailDto> couponListBy (Pageable pageable, String orderCriteria){
+        pageable = PageRequest.of(FIRST_PAGE, PAGE_COUPON_COUNTING, Sort.by(Sort.Direction.DESC, orderCriteria));
         Page<Coupon> couponPage = couponRepository.findAll(pageable);
         Page<CouponDetailDto> couponDetailDtos = couponPage.map((c -> new CouponDetailDto(c)));
         return couponDetailDtos;
     }
 
-//    private static final int PAGE_COUPON_COUNT = 9;
-//
-//    //컨트롤러에서 넘겨받은 카테고리 및 정렬 기준으로 게시물 페이징 객체 반환
-//   //@Override
-//    public Page<CouponDetailDto> getCouponList(Pageable pageable, int pageNo, Category category, String orderCriteria) {
-//        pageable = PageRequest.of(pageNo, PAGE_COUPON_COUNT, Sort.by(Sort.Direction.DESC, orderCriteria));
-//        Page<Coupon> couponPage = couponRepository.findByCategory(category, pageable);
-//        Page<CouponDetailDto> result = couponPage.map((c -> new CouponDetailDto(c)));
-//        return result;
-//    }
 
 
 

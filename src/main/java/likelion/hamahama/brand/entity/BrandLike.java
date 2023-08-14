@@ -18,7 +18,7 @@ public class BrandLike {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="coupon_id")
+    @JoinColumn(name="brand_id")
     private Brand brand;
 
     @ManyToOne(fetch = FetchType.LAZY)

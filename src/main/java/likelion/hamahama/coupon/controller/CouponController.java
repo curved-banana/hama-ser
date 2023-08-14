@@ -1,5 +1,7 @@
 package likelion.hamahama.coupon.controller;
 
+import likelion.hamahama.comment.entity.Comment;
+import likelion.hamahama.comment.service.CommentService;
 import likelion.hamahama.common.CreateResponseMessage;
 import likelion.hamahama.coupon.dto.CouponDetailDto;
 import likelion.hamahama.coupon.dto.CouponDto;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +37,7 @@ public class CouponController {
     private final CouponService couponService;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final CommentService commentService;
 
 //    // 카테고리 별 쿠폰 조회
 //    @GetMapping("/coupons/{category}")
@@ -42,7 +46,7 @@ public class CouponController {
 //    }
 
     // 쿠폰 ID 기반으로 단일 쿠폰 조회 = 쿠폰 상세 페이지
-    @GetMapping("/couponDetail/{couponId}")
+    @GetMapping("/coupon/{couponId}")
     public Coupon findCouponByName(@PathVariable long couponId) {
 
         return couponService.findCouponById(couponId);
@@ -51,14 +55,14 @@ public class CouponController {
     //================================
 
     // 쿠폰 등록
-    @PostMapping("/coupons")
+    @PostMapping("/coupon/create")
     public void addCoupon(@RequestBody CouponDto theCoupon) {
         theCoupon.setCouponId(0);
         couponService.saveCoupon(theCoupon);
     }
 
     // 쿠폰 수정
-    @PutMapping("/couponDetail/{couponId}")
+    @PutMapping("/coupon/{couponId}/update")
     public void updateCoupon(@PathVariable long couponId, @RequestBody CouponDto theCouponDTO) {
 
         couponService.updateCoupon(theCouponDTO, couponId);
@@ -66,7 +70,7 @@ public class CouponController {
     }
 
     // 쿠폰 삭제
-    @DeleteMapping("/couponDetail/{couponId}")
+    @DeleteMapping("/coupon/{couponId}/delete")
     public String deleteCoupon(@PathVariable long couponId) {
         Coupon tempCoupon = couponService.findCouponById(couponId);
 
@@ -92,7 +96,7 @@ public class CouponController {
     }
 
     // ========= 브랜드에 해당되는 쿠폰 리스트 ====================
-    @GetMapping("/coupon/{brandId}")
+    @GetMapping("/coupon/{brandId}/list")
     public Page<CouponDetailDto> couponByBrand(@PathVariable("brandId") Long brandId, Pageable pageable) {
         return couponService.findCouponByBrand(brandId, pageable);
     }
@@ -106,23 +110,21 @@ public class CouponController {
     }
 
     // 메인 페이지에서 보이는 쿠폰들 orderby = 최신순(createdDate), 인기순(likeCount)
-    @GetMapping("/main/coupons")
-    public Page<CouponDetailDto> couponListBy(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-                                              @RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria,
+    @GetMapping("/coupon/main")
+    public Page<CouponDetailDto> couponListBy(@RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria,
                                               Pageable pageable) {
-        return couponService.couponListBy(pageable, pageNo, orderCriteria);
+        return couponService.couponListBy(pageable, orderCriteria);
+    }
+    // 키워드 검색으로 쿠폰 값 출력 - 한 쿠폰에 대한 댓글 목록들은 commentController에
+    @GetMapping("/coupon/keyword/")
+    public ResponseEntity<Page<Coupon>> getCouponsByKeyword(
+            @RequestParam String keyword,
+            @PageableDefault(size = 10) Pageable pageable) {
+        Page<Coupon> coupons = couponService.couponSearchList(keyword, pageable);
+        return ResponseEntity.ok(coupons);
     }
 
 
-//    // 쿠폰 게시글 정렬 ( 인기순 / 최신순 )
-//    // ======= 글 전체를 카테고리별/페이징별/정렬기준별 조회하는 컨트롤러
-//    @GetMapping("/{category}")
-//    public Page<CouponDetailDto> searchByCategory(@PathVariable(required = false) String category,
-//                                                  @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
-//                                                  @RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria,
-//                                                  Pageable pageable) {
-//        return couponService.getCouponList(pageable, pageNo, Category.valueOf(category), orderCriteria);
-//    }
 
 
 
