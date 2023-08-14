@@ -42,7 +42,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     List<Coupon> findAll();
 
-    Coupon findByCouponName(String theName);
+    Optional<Coupon> findByCouponName(String theName);
 
     Coupon findByCouponNameAndBrand_brandName(String couponName, String brandName);
 

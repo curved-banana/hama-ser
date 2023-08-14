@@ -70,7 +70,6 @@ public class LoginService {
 
             return SignResponse.builder()
                     .id(user.getId())
-                    .name(user.getName())
                     .nickname(user.getNickname())
                     .email(user.getEmail())
                     .role(user.getRoles())
@@ -92,7 +91,6 @@ public class LoginService {
         try {
             User user = User.builder()
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .name(request.getName())
                     .nickname(request.getNickname())
                     .email(request.getEmail())
                     .build();

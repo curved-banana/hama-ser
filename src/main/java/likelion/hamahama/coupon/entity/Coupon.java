@@ -21,6 +21,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
+@Table(name="coupon_table")
 public class Coupon extends BaseTimeEntity {
 
     @Id

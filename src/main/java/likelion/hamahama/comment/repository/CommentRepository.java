@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Optional<Comment> findByTwoIds(Long userId, Long couponId);
+    Optional<Comment> findByUserIdAndCouponId(Long userId, Long couponId);
 
     boolean existByIds(String userId, String couponId);
 
@@ -21,4 +21,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     // ========= 쿠폰 이름에 포함된 키워드 찾는 메서드
    // List<Comment> findByCouponId(Long couponId);
     Page<Comment> findByCouponId(Long couponId);
+
+
 }

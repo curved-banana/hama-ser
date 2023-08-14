@@ -16,11 +16,11 @@ public class CouponLike {
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="coupon_id")
+    @JoinColumn(name="coupon_id", referencedColumnName = "coupon_id")
     private Coupon coupon;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", referencedColumnName = "user_id")
     private User user;
 
 
