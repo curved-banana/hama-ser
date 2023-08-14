@@ -16,12 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
 import java.util.List;
-<<<<<<< Updated upstream
-// 0814 @Autowired 지우고 requierdArgeConstructor로 변경
-=======
 import java.util.Optional;
 
->>>>>>> Stashed changes
 @Service
 @RequiredArgsConstructor
 public class BrandService {

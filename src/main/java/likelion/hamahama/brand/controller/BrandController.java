@@ -7,6 +7,7 @@ import likelion.hamahama.brand.repository.BrandLikeRepsitory;
 import likelion.hamahama.brand.repository.BrandRepository;
 import likelion.hamahama.brand.service.BrandService;
 import likelion.hamahama.common.CreateResponseMessage;
+import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.UserRepository;
@@ -33,15 +34,15 @@ public class BrandController {
     }
 
     // 브랜드 상세 조회
-<<<<<<< Updated upstream
     @GetMapping("/{brandId}")
-    public BrandDto getBrand(@PathVariable long brandId){
-        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId));
-=======
+    public BrandDto getBrand(@PathVariable long brandId) {
+        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
+        return theBrandDTO;
+    }
+
     @GetMapping("/brands/{brandId}")
     public BrandDto getBrand(@PathVariable Long brandId){
         BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
->>>>>>> Stashed changes
 
         if(theBrandDTO == null){
             throw new RuntimeException("브랜드가 발견 되지 않았습니다 - " + brandId);
@@ -52,12 +53,12 @@ public class BrandController {
     // ============== 브랜드 즐겨찾기 (마이페이지) ================
     @PostMapping("/mypage/{userId}/{brandId}/edit")
     public CreateResponseMessage likeBrand(@PathVariable("userId") Long userId, @PathVariable("brandId") Long brandId){
-        Brand brand = brandRepository.findById(brandId).get();
+        Optional<Brand> brand = brandRepository.findById(brandId);
         User user = userRepository.findById(userId).get();
-        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user, brand);
+        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user, brand.get());
         if(brandLike == null ){
-            brandService.createBrandFavorite(user, brand);
-        }else brandService.deleteBrandFavorite(user, brand);
+            brandService.createBrandFavorite(user, brand.get());
+        }else brandService.deleteBrandFavorite(user, brand.get());
         return new CreateResponseMessage((long) 200, "좋아요 성공");
     }
     // ============== 카테고리에 맞는 브랜드 찾기 =============
@@ -73,8 +74,7 @@ public class BrandController {
         return brandlist;
     }
 
-<<<<<<< Updated upstream
-=======
+
     // 브랜드 삭제
     @DeleteMapping("/brands/{brandId}")
     public String deleteBrand(@PathVariable Long brandId){
@@ -84,15 +84,14 @@ public class BrandController {
             throw new RuntimeException("브랜드가 발견 되지 않았습니다 - " + brandId);
         }
 
-        List<Coupon> coupons = tempBrand.get().getCoupons();
-
-        for(Coupon tempCoupon : coupons){
-            tempCoupon.setBrand(null);
-        }
+//        List<Coupon> coupons = tempBrand.get().getCoupons();
+//
+//        for(Coupon tempCoupon : coupons){
+//            tempCoupon.setBrand(null);
+//        }
 
         brandService.deleteById(brandId);
 
         return "브랜드가 삭제 되었습니다 - " + brandId;
     }
->>>>>>> Stashed changes
 }

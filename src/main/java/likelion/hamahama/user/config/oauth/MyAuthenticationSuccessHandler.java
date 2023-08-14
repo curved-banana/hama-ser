@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static likelion.hamahama.user.entity.Role.ROLE_USER;
+
 @Component
 @RequiredArgsConstructor
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -67,16 +69,11 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             System.out.println(email);
         }
 
-
-
-
-        List<String> roles = new ArrayList<>();
-        roles.add("ROLE_USER");
         //authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(oAuth2User.getAttribute("email"), oAuth2User.getAttribute("password")));
         if (authentication.isAuthenticated()) {
             //RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getUsername());
-            String accessToken = jwtProvider.createAccessToken(email, Role.ROLE_USER);
-            String refreshToken = jwtProvider.createRefreshToken(email, Role.ROLE_USER);
+            String accessToken = jwtProvider.createAccessToken(email, ROLE_USER);
+            String refreshToken = jwtProvider.createRefreshToken(email, ROLE_USER);
             jwtProvider.setHeaderAccessToken(response, accessToken);
             jwtProvider.setHeaderRefreshToken(response, refreshToken);
 

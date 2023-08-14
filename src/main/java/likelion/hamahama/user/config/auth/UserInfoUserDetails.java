@@ -46,7 +46,7 @@ public class UserInfoUserDetails implements UserDetails, OAuth2User {
 //                .map(SimpleGrantedAuthority::new)
 //                .collect(Collectors.toList());
         ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
-        simpleGrantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+        simpleGrantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         return simpleGrantedAuthorities;
     }
 

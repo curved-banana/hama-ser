@@ -6,9 +6,7 @@ import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.CouponLike;
 import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -16,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "brand_table")
-@Getter
-@Setter
+@Data
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "brand_table")
 public class Brand {
 
     // 브랜드 ID
@@ -45,19 +44,19 @@ public class Brand {
     @ColumnDefault("0")
     private boolean favoriteStatus;
 
-    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Coupon> coupons;
 
     /**추가*/
     @OneToMany(
-            mappedBy = "coupon",
+            mappedBy = "brand",
             cascade =  CascadeType.ALL,
             orphanRemoval = true
     )
     private List<BrandLike> likeUsers = new ArrayList<>();
     /**========================*/
-    public Brand(){
-    }
+//    public Brand(){
+//    }
 
     public Brand(Category category, String brandName, String brandImgUrl) {
         this.category = category;

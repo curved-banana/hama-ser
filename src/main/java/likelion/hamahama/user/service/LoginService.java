@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static likelion.hamahama.user.entity.Role.ROLE_USER;
+
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -97,7 +99,7 @@ public class LoginService {
                     .password(passwordEncoder.encode(request.getPassword()))
                     .nickname(request.getNickname())
                     .email(request.getEmail())
-                    .role(Role.ROLE_ADMIN)
+                    .role(ROLE_USER)
                     .build();
 
             userRepository.save(user);

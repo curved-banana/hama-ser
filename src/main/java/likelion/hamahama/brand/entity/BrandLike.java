@@ -1,6 +1,5 @@
 package likelion.hamahama.brand.entity;
 
-import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,17 +10,17 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="favorites-brand_table")
+@Table(name="favorites_brand_table")
 public class BrandLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="brand_id")
     private Brand brand;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 

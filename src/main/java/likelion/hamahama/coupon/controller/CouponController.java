@@ -47,15 +47,11 @@ public class CouponController {
 //    }
 
     // 쿠폰 ID 기반으로 단일 쿠폰 조회 = 쿠폰 상세 페이지
-<<<<<<< Updated upstream
     @GetMapping("/coupon/{couponId}")
-    public Coupon findCouponByName(@PathVariable long couponId) {
+    public Optional<Coupon> findCouponByName(@PathVariable String couponId) {
+        Long requestCouponId = Long.valueOf(couponId);
 
-=======
-    @GetMapping("/couponDetail/{couponId}")
-    public Optional<Coupon> findCouponByName(@PathVariable long couponId){
->>>>>>> Stashed changes
-        return couponService.findCouponById(couponId);
+        return couponService.findCouponById(requestCouponId);
     }
 
     //================================
@@ -69,27 +65,24 @@ public class CouponController {
 
     // 쿠폰 수정
     @PutMapping("/coupon/{couponId}/update")
-    public void updateCoupon(@PathVariable long couponId, @RequestBody CouponDto theCouponDTO) {
-
-        couponService.updateCoupon(theCouponDTO, couponId);
+    public void updateCoupon(@PathVariable String couponId, @RequestBody CouponDto theCouponDTO) {
+        Long coupon_id = Long.valueOf(couponId);
+        couponService.updateCoupon(theCouponDTO, coupon_id);
 
     }
 
     // 쿠폰 삭제
-<<<<<<< Updated upstream
-    @DeleteMapping("/coupon/{couponId}/delete")
-    public String deleteCoupon(@PathVariable long couponId) {
-        Coupon tempCoupon = couponService.findCouponById(couponId);
-=======
-    @DeleteMapping("/couponDetail/{couponId}")
-    public String deleteCoupon(@PathVariable long couponId){
-        Optional<Coupon> tempCoupon = couponService.findCouponById(couponId);
->>>>>>> Stashed changes
+    @GetMapping("/coupon/{couponId}/delete")
+    public String deleteCoupon(@PathVariable String couponId){
+        Long coupon_id = Long.valueOf(couponId);
+
+        Optional<Coupon> tempCoupon = couponService.findCouponById(coupon_id);
+
 
         if (tempCoupon == null) {
             throw new RuntimeException("쿠폰이 발견 되지 않았습니다 - " + couponId);
         }
-        couponService.deleteById(couponId);
+        couponService.deleteById(coupon_id);
 
         return "쿠폰이 삭제 되었습니다 - " + couponId;
     }
@@ -97,13 +90,13 @@ public class CouponController {
     //========= 쿠폰 즐겨찾기(이미 즐겨찾기 달려있다면 즐겨찾기 취소)=============
     @PostMapping("/coupon/{couponId}/like")
     public CreateResponseMessage likeCoupon(@PathVariable("userId") Long userId, @PathVariable("couponId") Long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).get();
+        Optional<Coupon> coupon = couponRepository.findById(couponId);
         User user = userRepository.findById(userId).get();
         //User user = userService.findUser(email);
-        CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user, coupon);
+        CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user, coupon.get());
         if (couponLike == null) {
-            couponLikeService.createCouponLike(user, coupon);
-        } else couponLikeService.deleteCouponLike(user, coupon);
+            couponLikeService.createCouponLike(user, coupon.get());
+        } else couponLikeService.deleteCouponLike(user, coupon.get());
         return new CreateResponseMessage((long) 200, "좋아요 성공");
     }
 

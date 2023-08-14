@@ -64,7 +64,7 @@ public class JwtProvider {
     // Create token
     public String createToken(String email,Role role, long tokenValid) {
         Claims claims = Jwts.claims().setSubject(email); // claims 생성 및 payload 설정
-        claims.put("roles", role); // 권한 설정, key/ value 쌍으로 저장
+        claims.put("roles", role.toString()); // 권한 설정, key/ value 쌍으로 저장
         Date date = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 발행 유저 정보 저장
@@ -78,7 +78,7 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userInfoUserDetailsService.loadUserByUsername(this.getUserEmail(token));
         System.out.println("설정된 권한은 " + userDetails.getAuthorities());
-        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // 토큰에서 회원 정보 추출

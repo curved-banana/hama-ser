@@ -4,7 +4,10 @@ package likelion.hamahama.user.entity;
 import likelion.hamahama.brand.entity.BrandLike;
 import likelion.hamahama.coupon.entity.CouponLike;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -55,11 +58,14 @@ public class User extends BaseTimeEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 10)
     private List<CouponLike> likeCoupons = new ArrayList<>();
 
 /**추가 */
     @OneToMany(
             mappedBy ="user",
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

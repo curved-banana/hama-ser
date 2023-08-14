@@ -25,7 +25,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     // ========= 쿠폰 이름에 포함된 키워드 찾는 메서드
     Page<Coupon> findByCouponNameContaining(String searchKeyword, Pageable pageable);
-    Optional<Coupon> findByCouponNameContaining(String couponName);
+    Coupon findByCouponNameContaining(String couponName);
 
 
     // === 쿠폰 정렬 (인기순/최신순) 일단 만들어두는 중
@@ -33,13 +33,10 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findAll(Pageable pageable);
     Page<Coupon> findByLikeCount(Integer likeCount, Pageable pageable);
 
-<<<<<<< Updated upstream
-    // 추가
+    // 추가=
     Page<Coupon> findAllByLikeUsersIn(List<CouponLike> couponLike, Pageable pageable);
     //태현
-    Coupon findById(long theId);
-=======
->>>>>>> Stashed changes
+
 
     @Query("SELECT u FROM Coupon u WHERE u.brand.id = :data")
     List<Coupon> findAllByBrandId(@Param("data") long theId);

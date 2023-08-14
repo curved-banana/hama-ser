@@ -1,11 +1,8 @@
 package likelion.hamahama.comment.service;
 
-<<<<<<< Updated upstream
+
 import likelion.hamahama.comment.dto.CommentRequestDto;
-import likelion.hamahama.comment.dto.CommentResponse;
-=======
-import likelion.hamahama.comment.dto.CommentRequest;
->>>>>>> Stashed changes
+import likelion.hamahama.comment.dto.CommentDto;
 import likelion.hamahama.comment.entity.Comment;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.CouponLike;
@@ -16,23 +13,17 @@ import likelion.hamahama.comment.repository.CommentRepository;
 import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< Updated upstream
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-=======
->>>>>>> Stashed changes
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< Updated upstream
+
 import java.util.List;
 import java.util.Optional;
-=======
-import javax.swing.text.html.Option;
 import java.util.*;
->>>>>>> Stashed changes
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +40,7 @@ public class CommentService {
     @Autowired
     private CouponLikeRepository couponLikeRepository;
 
-    public void saveComment(CommentRequest request){
+    public void saveComment(CommentDto request){
 
         Optional<User> user = userRepository.findByEmail(request.getUserEmail());
 
@@ -72,7 +63,7 @@ public class CommentService {
     }
 
     //유저가 작성한 쿠폰의 댓글 조회
-    public CommentRequest getComment(String email, Long couponId){
+    public CommentDto getComment(String email, Long couponId){
 
         Optional<User> user = userRepository.findByEmail(email);
 
@@ -80,7 +71,7 @@ public class CommentService {
 
         Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
 
-        CommentRequest response = CommentRequest
+        CommentDto response = CommentDto
                 .builder()
                 .userEmail(user.get().getEmail())
                 .couponName(coupon.get().getCouponName())
@@ -109,13 +100,13 @@ public class CommentService {
         return result;
     }
     // 검색 결과 후 해당하는 쿠폰 아이디를 받아 쿠폰에 달린 댓글들 불러오기
-    @Transactional
-    public Page<CommentRequestDto> findAllComment(Long couponId,Pageable pageable){
-        Page<Comment> findComment = commentRepository.findByCouponId(couponId);
-        Page<CommentRequestDto> findResult =
-                findComment.map(c -> new CommentRequestDto(c.getCoupon().getBrand(),c.getCoupon(),c));
-        return findResult;
-    }
+//    @Transactional
+//    public Page<CommentRequestDto> findAllComment(Long couponId,Pageable pageable){
+//        Page<Comment> findComment = commentRepository.findByCouponId(couponId);
+//        Page<CommentRequestDto> findResult =
+//                findComment.map(c -> new CommentRequestDto(c.getCoupon().getBrand(),c.getCoupon(),c));
+//        return findResult;
+//    }
 //    @Transactional
 //    public List<Comment> findCommentsByCouponId(Long couponId){
 //        List<Comment> findComment = commentRepository.findByCouponId(couponId);
@@ -124,7 +115,7 @@ public class CommentService {
 
 
     //유저가 작성한 모든 댓글 조회
-    public List<CommentRequest> getAllComments(String email){
+    public List<CommentDto> getAllComments(String email){
 
         Optional<User> user = userRepository.findByEmail(email);
         Optional<List<Comment>> comments = commentRepository.findByUserId(user.get().getId());
@@ -144,10 +135,10 @@ public class CommentService {
             couponList.add(comment.getCoupon().getCouponName());
         });
 
-        List<CommentRequest> response = new ArrayList<>();
+        List<CommentDto> response = new ArrayList<>();
 
         for(int i= commentList.size(); i>0; i--){
-            response.add(CommentRequest
+            response.add(CommentDto
                     .builder()
                             .comment(commentList.get(i-1))
                             .brandName(brandList.get(i-1))
@@ -159,7 +150,7 @@ public class CommentService {
     }
 
     //쿠폰명에 해당하는 댓글 목록 조회(닉네임, 쿠폰명, 댓글)
-    public List<CommentRequest> getAllCommentsByCouponId(Long couponId){
+    public List<CommentDto> getAllCommentsByCouponId(Long couponId){
 
         List<String> commentList = new ArrayList<>();
         List<String> nicknameList = new ArrayList<>();
@@ -177,10 +168,10 @@ public class CommentService {
 
         }
 
-        List<CommentRequest> response = new ArrayList<>();
+        List<CommentDto> response = new ArrayList<>();
 
         for(int i = commentList.size(); i>0; i--){
-            response.add(CommentRequest
+            response.add(CommentDto
                     .builder()
                             .couponName(couponList.get(i-1))
                             .comment(commentList.get(i-1))
@@ -196,9 +187,9 @@ public class CommentService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        Optional<Coupon> coupon = couponRepository.findByCouponNameContaining(couponName);
+        Coupon coupon = couponRepository.findByCouponNameContaining(couponName);
 
-        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
+        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.getId());
 
         if(commentEntity.isPresent()){
             commentEntity.get().setComment(comment);
@@ -212,9 +203,9 @@ public class CommentService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        Optional<Coupon> coupon = couponRepository.findByCouponNameContaining(couponName);
+        Coupon coupon = couponRepository.findByCouponNameContaining(couponName);
 
-        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
+        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.getId());
 
         if(commentEntity.isPresent()){
             commentRepository.delete(commentEntity.get());

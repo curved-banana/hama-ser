@@ -93,7 +93,7 @@ logging:
     org.hibernate.SQL: debug
 
 jwt:
-  secret: vpJyPJsLwlWRKY52bp/1cB/uHeGiVMXGhP8XEuT2640= # ??? ???? Base64? ???? ?
+  secret: dsvfhwpefoneidshfnlwehpfeofnihfpenipodsnfh # ??? ???? Base64? ???? ?
   refresh-token-validity-in-seconds: 1209600 # 14?
   access-token-validity-in-seconds: 43200 # 12??
 

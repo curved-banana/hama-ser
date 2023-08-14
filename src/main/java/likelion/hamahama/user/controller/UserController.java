@@ -47,10 +47,6 @@ public class UserController {
 
     private final HttpSession httpSession;
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam(value="code")String code, HttpServletResponse response) throws Exception {
 
@@ -66,32 +62,29 @@ public class UserController {
         //return new ResponseEntity<>(kakaoLoginService.createKakaoUser(tokenDTO.getAccessToken(), tokenDTO.getRefreshToken()), HttpStatus.OK)
         return redirectView;
     }
-    @PostMapping("user/register")
+    @PostMapping("/register")
     public ResponseEntity<Boolean> signup(@RequestBody SignRequest signRequest) throws Exception {
         return new ResponseEntity<>(loginService.register(signRequest), HttpStatus.OK);
     }
 
-    @PostMapping("user/login")
+    @PostMapping("/login")
     public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request, HttpServletResponse response) throws Exception {
         System.out.println(response);
         return new ResponseEntity<>(loginService.login(request, response), HttpStatus.OK);
     }
 
-    @PostMapping("user/reissue")
+    @PostMapping("/reissue")
     public ResponseEntity<String> reissueAccessToken(@RequestHeader("refresh-token") String bearerToken){
         String new_accessToken = loginService.reissueAccessToken(bearerToken);
         return new ResponseEntity<>(new_accessToken, HttpStatus.OK);
     }
 
 
-<<<<<<< Updated upstream
-    @PostMapping("user/register/mailConfirm")
-    public @ResponseBody String mailConfirm(@RequestParam(value = "email") String email) throws Exception{
-=======
+
+
     //회원가입 시 이메일 인증코드 받기
     @PostMapping("user/register/mailConfirm")
     public @ResponseBody String mailConfirm(@RequestBody SignRequest request) throws Exception{
->>>>>>> Stashed changes
 
         String code = registerMail.sendReceiveCodeMessage(request.getEmail());
         System.out.println("인증코드 : " + code);
@@ -99,19 +92,6 @@ public class UserController {
         return code;
     }
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-=======
-
-//    @GetMapping("/users")
-//    public ResponseEntity<List<User>> findAll(){
-//
-//        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
-//
-//    }
-
->>>>>>> a2cfa3138f6d7e5a3191f1488a30120c060c1b31
-=======
     //이메일로 비밀번호 변경 url 받기
     @PostMapping("/user/resetPassword")
     public void resetPassword(@RequestBody SignRequest request) throws Exception{
@@ -119,7 +99,6 @@ public class UserController {
 
     }
 
->>>>>>> Stashed changes
     //전체 회원 조회
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAll(){
@@ -148,8 +127,4 @@ public class UserController {
         userService.deleteUser(email);
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a2cfa3138f6d7e5a3191f1488a30120c060c1b31
 }

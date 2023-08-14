@@ -43,8 +43,9 @@ public class CouponService {
 //    }
 
     // 쿠폰 ID 기반으로 쿠폰 찾기
-    public Optional<Coupon> findCouponById(Long theId) {
-        return couponRepository.findById(theId);
+    public Optional<Coupon> findCouponById(Long couponId) {
+
+        return couponRepository.findById(couponId);
     }
 
     //====================================
