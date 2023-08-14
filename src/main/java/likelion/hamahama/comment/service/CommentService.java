@@ -36,7 +36,7 @@ public class CommentService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        Optional<Coupon> coupon = couponRepository.findByCouponNameContaining(couponName);
+        Optional<Coupon> coupon = couponRepository.findByCouponName(couponName);
 
         Comment new_comment = Comment
                 .builder()
@@ -51,7 +51,7 @@ public class CommentService {
 
         Optional<Coupon> coupon = couponRepository.findByCouponNameContaining(couponName);
 
-        Optional<Comment> commentEntity = commentRepository.findByTwoIds(user.get().getId(), coupon.get().getId());
+        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
 
         CommentResponse response = CommentResponse
                 .builder()
@@ -103,7 +103,7 @@ public class CommentService {
 
         Optional<Coupon> coupon = couponRepository.findByCouponNameContaining(couponName);
 
-        Optional<Comment> commentEntity = commentRepository.findByTwoIds(user.get().getId(), coupon.get().getId());
+        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
 
         if(commentEntity.isPresent()){
             commentEntity.get().setComment(comment);
@@ -119,7 +119,7 @@ public class CommentService {
 
         Optional<Coupon> coupon = couponRepository.findByCouponNameContaining(couponName);
 
-        Optional<Comment> commentEntity = commentRepository.findByTwoIds(user.get().getId(), coupon.get().getId());
+        Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
 
         if(commentEntity.isPresent()){
             commentRepository.delete(commentEntity.get());

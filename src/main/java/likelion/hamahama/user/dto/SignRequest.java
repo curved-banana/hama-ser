@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SignRequest {
     private Long id;
-    private String name;
     private String nickname;
     private String email;
     private String password;
-    private String phoneNum;
 }

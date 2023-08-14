@@ -153,7 +153,6 @@ public class KakaoLoginService {
                 userRepository.save(user);
             }else{
                 user = User.builder()
-                        .name(name)
                         .email(email)
                         .roles(roles)
                         .provider("kakao")

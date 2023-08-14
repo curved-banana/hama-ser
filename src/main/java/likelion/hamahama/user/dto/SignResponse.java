@@ -15,18 +15,15 @@ import java.util.List;
 @Builder
 public class SignResponse {
     private Long id;
-    private String name;
     private String nickname;
     private String password;
     private String email;
-    private String phoneNum;
     private List<String> role;
     private String accessToken;
     private String refreshToken;
 
     public SignResponse(User user){
         this.id = user.getId();
-        this.name = user.getName();
         this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.email = user.getEmail();
