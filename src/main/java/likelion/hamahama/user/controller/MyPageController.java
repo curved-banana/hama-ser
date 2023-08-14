@@ -31,7 +31,7 @@ public class MyPageController {
 
     }
 
-    // 즐겨찾기한 브랜드
+    // 즐겨찾기한 브랜드들 
     @GetMapping("/mypage/likeBrand")
     public Page<BrandDto> getMyLikedBrands(User user, Pageable pageable){
         String email = user.getEmail();
