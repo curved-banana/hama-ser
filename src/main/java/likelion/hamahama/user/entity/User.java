@@ -42,12 +42,16 @@ public class User extends BaseTimeEntity {
     private List<String> favoriteBrands = new ArrayList<>();
 
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+//    //@ElementCollection(fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<String> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     @OneToMany(
             mappedBy ="user",
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

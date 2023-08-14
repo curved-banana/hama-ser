@@ -47,7 +47,10 @@ public class UserController {
 
     private final HttpSession httpSession;
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam(value="code")String code, HttpServletResponse response) throws Exception {
 
@@ -81,15 +84,22 @@ public class UserController {
     }
 
 
+<<<<<<< Updated upstream
     @PostMapping("user/register/mailConfirm")
     public @ResponseBody String mailConfirm(@RequestParam(value = "email") String email) throws Exception{
+=======
+    //회원가입 시 이메일 인증코드 받기
+    @PostMapping("user/register/mailConfirm")
+    public @ResponseBody String mailConfirm(@RequestBody SignRequest request) throws Exception{
+>>>>>>> Stashed changes
 
-        String code = registerMail.sendSimpleMessage(email);
+        String code = registerMail.sendReceiveCodeMessage(request.getEmail());
         System.out.println("인증코드 : " + code);
 
         return code;
     }
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
 
@@ -101,6 +111,15 @@ public class UserController {
 //    }
 
 >>>>>>> a2cfa3138f6d7e5a3191f1488a30120c060c1b31
+=======
+    //이메일로 비밀번호 변경 url 받기
+    @PostMapping("/user/resetPassword")
+    public void resetPassword(@RequestBody SignRequest request) throws Exception{
+        registerMail.sendPasswordResetUrl(request.getEmail());
+
+    }
+
+>>>>>>> Stashed changes
     //전체 회원 조회
     @GetMapping("/users")
     public ResponseEntity<List<User>> findAll(){

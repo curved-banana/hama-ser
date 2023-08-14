@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/brand")
@@ -32,9 +33,15 @@ public class BrandController {
     }
 
     // 브랜드 상세 조회
+<<<<<<< Updated upstream
     @GetMapping("/{brandId}")
     public BrandDto getBrand(@PathVariable long brandId){
         BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId));
+=======
+    @GetMapping("/brands/{brandId}")
+    public BrandDto getBrand(@PathVariable Long brandId){
+        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
+>>>>>>> Stashed changes
 
         if(theBrandDTO == null){
             throw new RuntimeException("브랜드가 발견 되지 않았습니다 - " + brandId);
@@ -66,4 +73,26 @@ public class BrandController {
         return brandlist;
     }
 
+<<<<<<< Updated upstream
+=======
+    // 브랜드 삭제
+    @DeleteMapping("/brands/{brandId}")
+    public String deleteBrand(@PathVariable Long brandId){
+        Optional<Brand> tempBrand = brandService.findBrandById(brandId);
+
+        if(tempBrand == null){
+            throw new RuntimeException("브랜드가 발견 되지 않았습니다 - " + brandId);
+        }
+
+        List<Coupon> coupons = tempBrand.get().getCoupons();
+
+        for(Coupon tempCoupon : coupons){
+            tempCoupon.setBrand(null);
+        }
+
+        brandService.deleteById(brandId);
+
+        return "브랜드가 삭제 되었습니다 - " + brandId;
+    }
+>>>>>>> Stashed changes
 }

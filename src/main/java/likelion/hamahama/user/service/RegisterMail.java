@@ -1,14 +1,19 @@
 package likelion.hamahama.user.service;
 
+import likelion.hamahama.user.entity.User;
+import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -18,33 +23,57 @@ public class RegisterMail{
 
     @Autowired
     private final JavaMailSender javaMailSender;
-    //private final SpringTemplateEngine templateEngine;
+
+    @Autowired
+    private final SpringTemplateEngine templateEngine;
+
+    @Autowired
+    private final UserRepository userRepository;
     private String ePw;
 
-    private MimeMessage createMessage(String code, String email) throws Exception{
+    private MimeMessage createReceiveCodeMessage(String code, String email) throws Exception{
+        Optional<User> user = userRepository.findByEmail(email);
+        String nickname = user.get().getNickname();
+
         MimeMessage message = javaMailSender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, email);
-        message.setSubject("하마하마 회원가입 이메일 인증");
+        message.setSubject("하마하마");
 
-        String msgg = "";
-        msgg += "<div style='margin:100px;'>";
-        msgg += "<h1 style='margin-bottom:55px;'> 안녕하세요, '하마하마'입니다</h1>";
-        msgg += "<p> 00님, 안녕하세요.</p>";
-        msgg += "<p>하마하마를 이용해주셔서 감사합니다.<p>";
-        msgg += "<p>고객님께서 인증번호를 요청하셨습니다.<p>";
-        msgg += "<p>아래 코드를 이용하여 인증을 해주시면 서비스 이용이 가능합니다.<p>";
-        msgg += "<div style='border:none; text-align:center;" +
-                "font-family:verdana; background-color:#EFF9FF; '>";
-        msgg += "<div style='margin-top:30px; font-size:130%'>";
-        msgg += "인증번호 <strong>";
-        msgg += ePw + "</strong><div><br/> "; // 메일에 인증번호 넣기
-        msgg += "</div>";
-        message.setText(msgg, "utf-8", "html");
+        message.setText(setReceiveCodeContext(code, nickname), "utf-8", "html");
 
-        message.setFrom(new InternetAddress("junho308917@naver.com"));
+        message.setFrom(new InternetAddress("hamahama0818@naver.com"));
+
+        return message;
+    }
+
+    private MimeMessage createPasswordChangeMessage(String email) throws Exception{
+        Optional<User> user = userRepository.findByEmail(email);
+        String nickname = user.get().getNickname();
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        message.addRecipients(Message.RecipientType.TO, email);
+        message.setSubject("하마하마");
+
+        message.setText(setPasswordChangeContext(nickname), "utf-8", "html");
+
+        message.setFrom(new InternetAddress("hamahama0818@naver.com"));
 
         return  message;
+    }
+
+    public String setReceiveCodeContext(String code, String nickname){
+        Context context = new Context();
+        context.setVariable("code", code);
+        context.setVariable("nickname", nickname);
+        return templateEngine.process("mail", context);
+    }
+
+    public String setPasswordChangeContext(String nickname){
+        Context context = new Context();
+        context.setVariable("nickname", nickname);
+        return templateEngine.process("passwordChange", context);
     }
 
     public String createKey() {
@@ -73,10 +102,10 @@ public class RegisterMail{
         return key.toString();
     }
 
-    public String sendSimpleMessage(String email)  throws Exception {
+    public String sendReceiveCodeMessage(String email)  throws Exception {
         ePw = createKey();
 
-        MimeMessage message = createMessage(ePw, email);
+        MimeMessage message = createReceiveCodeMessage(ePw, email);
         try { //예외처리
             javaMailSender.send(message);
         }catch(MailException e){
@@ -84,6 +113,18 @@ public class RegisterMail{
             throw new IllegalArgumentException();
         }
         return ePw;
+    }
+
+    public void sendPasswordResetUrl(String email)  throws Exception {
+        ePw = createKey();
+
+        MimeMessage message = createPasswordChangeMessage(email);
+        try { //예외처리
+            javaMailSender.send(message);
+        }catch(MailException e){
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
     }
 
 

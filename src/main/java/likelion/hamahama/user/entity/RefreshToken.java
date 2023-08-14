@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name="refreshtoken_table")
 public class RefreshToken {
 
     @Id

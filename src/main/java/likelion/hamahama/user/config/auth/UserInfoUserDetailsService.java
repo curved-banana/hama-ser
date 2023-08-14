@@ -25,7 +25,7 @@ public class UserInfoUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(username).orElseThrow(
                 () -> new UsernameNotFoundException("Invalid authentication!")
         );
-
+        System.out.println("user " + user);
         return new UserInfoUserDetails(user);
     }
 }

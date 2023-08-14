@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -46,9 +47,14 @@ public class CouponController {
 //    }
 
     // 쿠폰 ID 기반으로 단일 쿠폰 조회 = 쿠폰 상세 페이지
+<<<<<<< Updated upstream
     @GetMapping("/coupon/{couponId}")
     public Coupon findCouponByName(@PathVariable long couponId) {
 
+=======
+    @GetMapping("/couponDetail/{couponId}")
+    public Optional<Coupon> findCouponByName(@PathVariable long couponId){
+>>>>>>> Stashed changes
         return couponService.findCouponById(couponId);
     }
 
@@ -70,9 +76,15 @@ public class CouponController {
     }
 
     // 쿠폰 삭제
+<<<<<<< Updated upstream
     @DeleteMapping("/coupon/{couponId}/delete")
     public String deleteCoupon(@PathVariable long couponId) {
         Coupon tempCoupon = couponService.findCouponById(couponId);
+=======
+    @DeleteMapping("/couponDetail/{couponId}")
+    public String deleteCoupon(@PathVariable long couponId){
+        Optional<Coupon> tempCoupon = couponService.findCouponById(couponId);
+>>>>>>> Stashed changes
 
         if (tempCoupon == null) {
             throw new RuntimeException("쿠폰이 발견 되지 않았습니다 - " + couponId);

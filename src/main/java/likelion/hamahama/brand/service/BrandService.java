@@ -14,8 +14,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+<<<<<<< Updated upstream
 // 0814 @Autowired 지우고 requierdArgeConstructor로 변경
+=======
+import java.util.Optional;
+
+>>>>>>> Stashed changes
 @Service
 @RequiredArgsConstructor
 public class BrandService {
@@ -28,8 +34,9 @@ public class BrandService {
         return brandRepository.findAll();
     }
 
-    public Brand findBrandById(long theId){
-        return brandRepository.findById(theId);
+    public Optional<Brand> findBrandById(Long brandId){
+
+        return brandRepository.findById(brandId);
     }
 
     // 카테고리에 맞는 브랜드 불러오기
@@ -54,15 +61,15 @@ public class BrandService {
 
     // DTO를 받아와서 브랜드 업데이트
     @Transactional
-    public void updateBrand(BrandDto brandDto, long brandId){
+    public void updateBrand(BrandDto brandDto, Long brandId){
 
-        Brand tempBrand = brandRepository.findById(brandId);
+        Optional<Brand> tempBrand = brandRepository.findById(brandId);
 
-        tempBrand.setBrandName(brandDto.getBrandName());
-        tempBrand.setCategory(brandDto.getCategory());
-        tempBrand.setBrandImgUrl(brandDto.getBrandImgUrl());
+        tempBrand.get().setBrandName(brandDto.getBrandName());
+        tempBrand.get().setCategory(brandDto.getCategory());
+        tempBrand.get().setBrandImgUrl(brandDto.getBrandImgUrl());
 
-        brandRepository.save(tempBrand);
+        brandRepository.save(tempBrand.get());
     }
 
     // 브랜드 ID 기반으로 삭제

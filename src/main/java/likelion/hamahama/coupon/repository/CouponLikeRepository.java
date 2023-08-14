@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CouponLikeRepository extends JpaRepository< CouponLike, Long> {
 
@@ -21,4 +22,6 @@ public interface CouponLikeRepository extends JpaRepository< CouponLike, Long> {
     @Modifying
     @Query("update Coupon c set c.likeCount = c.likeCount - 1 where c.id = :coupon_id")
     void decreaseLikeCount(@Param("coupon_id") Long couponId);
+
+    Optional<CouponLike> findByUserIdAndCouponId(Long userId, Long couponId);
 }

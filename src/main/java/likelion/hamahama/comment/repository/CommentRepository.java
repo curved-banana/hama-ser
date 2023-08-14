@@ -3,8 +3,12 @@ package likelion.hamahama.comment.repository;
 import likelion.hamahama.comment.dto.CommentRequestDto;
 import likelion.hamahama.comment.entity.Comment;
 import likelion.hamahama.coupon.entity.Coupon;
+<<<<<<< Updated upstream
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+=======
+import likelion.hamahama.user.entity.User;
+>>>>>>> Stashed changes
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,6 +18,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Optional<Comment> findByUserIdAndCouponId(Long userId, Long couponId);
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
     boolean existByIds(String userId, String couponId);
@@ -26,4 +31,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 
 >>>>>>> a2cfa3138f6d7e5a3191f1488a30120c060c1b31
+=======
+    Optional<List<Comment>> findByUserId(Long userId);
+
+    Optional<List<Comment>> findByCouponId(Long couponId);
+
+>>>>>>> Stashed changes
 }
