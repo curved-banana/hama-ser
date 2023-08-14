@@ -1,7 +1,6 @@
 package likelion.hamahama.comment.controller;
 
-import likelion.hamahama.comment.dto.CommentRequest;
-import likelion.hamahama.comment.entity.Comment;
+import likelion.hamahama.comment.dto.CommentResponse;
 import likelion.hamahama.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,50 +8,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/comment")
 public class CommentController {
 
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/comment/create")
-    public void saveComment(@RequestBody CommentRequest request){
+    @PostMapping("/save")
+    public void saveComment(@RequestBody CommentResponse request){
 
-        commentService.saveComment(request);
+        commentService.saveComment(request.getUserEmail(), request.getCouponName(), request.getComment());
 
     }
 
-    @GetMapping("/comment")
-    public ResponseEntity<CommentRequest> getComment(@RequestBody CommentRequest request){
+    @GetMapping("/get")
+    public ResponseEntity<CommentResponse> getComment(@RequestBody CommentResponse request){
 
         return new ResponseEntity<>(
-                commentService.getComment(request.getUserEmail(), request.getCouponId()), HttpStatus.OK);
+                commentService.getComment(request.getUserEmail(), request.getCouponName()), HttpStatus.OK);
     }
 
-    @GetMapping("/comments/{email}")
-    public ResponseEntity<List<CommentRequest>> getAllComments(@RequestParam String email){
-        return new ResponseEntity<>(
-                commentService.getAllComments(email), HttpStatus.OK);
-    }
-
-    @GetMapping("/comments/{couponId}")
-    public ResponseEntity<List<CommentRequest>> getAllCommentsByCouponId(@PathVariable String couponId){
-        Long request = Long.valueOf(couponId);
-        return new ResponseEntity<>(commentService.getAllCommentsByCouponId(request), HttpStatus.OK);
-    }
-
-    @PostMapping("comment/update")
-    public void updateComment(@RequestBody CommentRequest request){
+    @PostMapping("/update")
+    public void updateComment(@RequestBody CommentResponse request){
         commentService.updateComment(request.getUserEmail(), request.getCouponName(), request.getComment());
     }
 
-    @GetMapping("comment/delete")
-    public void deleteComment(@RequestBody CommentRequest request){
+    @GetMapping("/delete")
+    public void deleteComment(@RequestBody CommentResponse request){
         commentService.deleteComment(request.getUserEmail(), request.getCouponName(), request.getComment());
     }
 }

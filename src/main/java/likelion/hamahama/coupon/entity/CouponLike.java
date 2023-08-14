@@ -6,10 +6,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Data
-@Builder
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name="favorites_table")
 public class CouponLike {
 

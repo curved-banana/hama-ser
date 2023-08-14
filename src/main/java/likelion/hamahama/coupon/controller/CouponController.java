@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class CouponController {
     }
     // 쿠폰 ID 기반으로 단일 쿠폰 조회 = 쿠폰 상세 페이지
     @GetMapping("/couponDetail/{couponId}")
-    public Optional<Coupon> findCouponByName(@PathVariable long couponId){
+    public Coupon findCouponByName(@PathVariable long couponId){
         return couponService.findCouponById(couponId);
     }
 
@@ -64,7 +63,7 @@ public class CouponController {
     // 쿠폰 삭제
     @DeleteMapping("/couponDetail/{couponId}")
     public String deleteCoupon(@PathVariable long couponId){
-        Optional<Coupon> tempCoupon = couponService.findCouponById(couponId);
+        Coupon tempCoupon = couponService.findCouponById(couponId);
 
         if(tempCoupon == null){
             throw new RuntimeException("쿠폰이 발견 되지 않았습니다 - " + couponId);

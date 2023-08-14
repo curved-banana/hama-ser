@@ -5,7 +5,6 @@ import likelion.hamahama.user.config.oauth.provider.GoogleUserInfo;
 import likelion.hamahama.user.config.oauth.provider.KakaoUserInfo;
 import likelion.hamahama.user.config.oauth.provider.NaverUserInfo;
 import likelion.hamahama.user.config.oauth.provider.OAuth2UserInfo;
-import likelion.hamahama.user.entity.Role;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +76,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         } else {
             user = User.builder()
                     .email(oAuth2UserInfo.getEmail())
-                    .role(Role.ROLE_USER)
+                    .roles(roles)
                     .provider(oAuth2UserInfo.getProvider())
                     .build();
 

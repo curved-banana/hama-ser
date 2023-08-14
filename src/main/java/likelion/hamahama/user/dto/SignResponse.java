@@ -1,7 +1,6 @@
 package likelion.hamahama.user.dto;
 
 //import com.rsa101.domain.Authority;
-import likelion.hamahama.user.entity.Role;
 import likelion.hamahama.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +18,7 @@ public class SignResponse {
     private String nickname;
     private String password;
     private String email;
-    private Role role;
-    //private List<String> role;
+    private List<String> role;
     private String accessToken;
     private String refreshToken;
 
@@ -29,6 +27,6 @@ public class SignResponse {
         this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.email = user.getEmail();
-        this.role = user.getRole();
+        this.role = user.getRoles();
     }
 }

@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BrandService {
+    @Autowired
+    private CouponRepository couponRepository;
 
     @Autowired
     private BrandRepository brandRepository;
@@ -22,9 +22,8 @@ public class BrandService {
         return brandRepository.findAll();
     }
 
-    public Optional<Brand> findBrandById(Long brandId){
-
-        return brandRepository.findById(brandId);
+    public Brand findBrandById(long theId){
+        return brandRepository.findById(theId);
     }
     // DTO 받아와서 브랜드 저장하기
     @Transactional
@@ -38,15 +37,15 @@ public class BrandService {
 
     // DTO를 받아와서 브랜드 업데이트
     @Transactional
-    public void updateBrand(BrandDto brandDto, Long brandId){
+    public void updateBrand(BrandDto brandDto, long brandId){
 
-        Optional<Brand> tempBrand = brandRepository.findById(brandId);
+        Brand tempBrand = brandRepository.findById(brandId);
 
-        tempBrand.get().setBrandName(brandDto.getBrandName());
-        tempBrand.get().setCategory(brandDto.getCategory());
-        tempBrand.get().setBrandImgUrl(brandDto.getBrandImgUrl());
+        tempBrand.setBrandName(brandDto.getBrandName());
+        tempBrand.setCategory(brandDto.getCategory());
+        tempBrand.setBrandImgUrl(brandDto.getBrandImgUrl());
 
-        brandRepository.save(tempBrand.get());
+        brandRepository.save(tempBrand);
     }
 
     // 브랜드 ID 기반으로 삭제

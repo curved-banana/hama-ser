@@ -1,11 +1,9 @@
 package likelion.hamahama.user.service;
 
 import likelion.hamahama.user.config.auth.JwtProvider;
-import likelion.hamahama.user.dto.ErrorMessage;
 import likelion.hamahama.user.dto.SignRequest;
 import likelion.hamahama.user.dto.SignResponse;
 import likelion.hamahama.user.entity.RefreshToken;
-import likelion.hamahama.user.entity.Role;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.RefreshTokenRepository;
 import likelion.hamahama.user.repository.UserRepository;
@@ -24,7 +22,6 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +43,8 @@ public class LoginService {
 
     public SignResponse login(SignRequest request, HttpServletResponse response) throws Exception {
         //유저가 입력한 이메일을 이용하여 DB에서 정보 가져오기
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()->
-            new BadCredentialsException("존재하지 않는 이메일입니다.")
-        );
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
+                new BadCredentialsException("유저정보를 찾을 수 없습니다."));
 
         //유저가 입력한 비밀번호와 DB에 저장된 비밀번호가 일치한지 검사
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -58,8 +54,8 @@ public class LoginService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         if (authentication.isAuthenticated()) {
             //RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getUsername());
-            String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
-            String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
+            String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRoles());
+            String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRoles());
             jwtProvider.setHeaderAccessToken(response, accessToken);
             jwtProvider.setHeaderRefreshToken(response, refreshToken);
 
@@ -76,7 +72,7 @@ public class LoginService {
                     .id(user.getId())
                     .nickname(user.getNickname())
                     .email(user.getEmail())
-                    .role(user.getRole())
+                    .role(user.getRoles())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();
@@ -97,8 +93,13 @@ public class LoginService {
                     .password(passwordEncoder.encode(request.getPassword()))
                     .nickname(request.getNickname())
                     .email(request.getEmail())
-                    .role(Role.ROLE_ADMIN)
                     .build();
+
+            List<String> roles = new ArrayList<>();
+            roles.add("ROLE_USER");
+            roles.add("ROLE_ADMIN");
+            user.setRoles(roles);
+
 
             userRepository.save(user);
         } catch (Exception e) {
@@ -124,7 +125,7 @@ public class LoginService {
         User user = userRepository.findByEmail(claims.getSubject()).orElseThrow(() ->
                 new UsernameNotFoundException("해당 이메일을 가진 유저가 존재하지 않습니다."));
 
-        String new_accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+        String new_accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRoles());
 
         return new_accessToken;
     }

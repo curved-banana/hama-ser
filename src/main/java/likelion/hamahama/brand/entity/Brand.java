@@ -24,7 +24,7 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="brand_id")
-    private Long id;
+    private long Id;
 
     // 카테고리(enum으로 선언하기)
     @Column(name="category")

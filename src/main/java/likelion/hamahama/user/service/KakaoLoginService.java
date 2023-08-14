@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import likelion.hamahama.user.config.auth.JwtProvider;
 import likelion.hamahama.user.entity.RefreshToken;
-import likelion.hamahama.user.entity.Role;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.RefreshTokenRepository;
 import likelion.hamahama.user.repository.UserRepository;
@@ -155,14 +154,14 @@ public class KakaoLoginService {
             }else{
                 user = User.builder()
                         .email(email)
-                        .role(Role.ROLE_USER)
+                        .roles(roles)
                         .provider("kakao")
                         .build();
 
                 userRepository.save(user);
             }
-            String access_token = jwtProvider.createAccessToken(email, Role.ROLE_USER);
-            String refresh_token = jwtProvider.createRefreshToken(email, Role.ROLE_USER);
+            String access_token = jwtProvider.createAccessToken(email, roles);
+            String refresh_token = jwtProvider.createRefreshToken(email, roles);
 
             jwtProvider.setHeaderAccessToken(response, access_token);
             jwtProvider.setHeaderRefreshToken(response, refresh_token);

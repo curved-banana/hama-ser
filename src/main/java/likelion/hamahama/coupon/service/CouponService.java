@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class CouponService {
     }
 
     // 쿠폰 ID 기반으로 쿠폰 찾기
-    public Optional<Coupon> findCouponById(Long theId) {
+    public Coupon findCouponById(long theId) {
         return couponRepository.findById(theId);
     }
 
@@ -69,20 +68,20 @@ public class CouponService {
     @Transactional
     public void updateCoupon(CouponDto couponDto, long couponId){
 
-        Optional<Coupon> tempCoupon = couponRepository.findById(couponId);
+        Coupon tempCoupon = couponRepository.findById(couponId);
 
         Brand tempBrand = findBrandByName(couponDto.getBrandName());
 
-        tempCoupon.get().setCouponName(couponDto.getCouponName());
-        tempCoupon.get().setCouponCode(couponDto.getCouponCode());
-        tempCoupon.get().setCouponUrl(couponDto.getCouponUrl());
-        tempCoupon.get().setStartDate(couponDto.getStartDate());
-        tempCoupon.get().setEndDate(couponDto.getEndDate());
-        tempCoupon.get().setDescription(couponDto.getDescription());
-        tempCoupon.get().setLikeCount(couponDto.getLikeCount());
-        tempCoupon.get().setBrand(tempBrand);
+        tempCoupon.setCouponName(couponDto.getCouponName());
+        tempCoupon.setCouponCode(couponDto.getCouponCode());
+        tempCoupon.setCouponUrl(couponDto.getCouponUrl());
+        tempCoupon.setStartDate(couponDto.getStartDate());
+        tempCoupon.setEndDate(couponDto.getEndDate());
+        tempCoupon.setDescription(couponDto.getDescription());
+        tempCoupon.setLikeCount(couponDto.getLikeCount());
+        tempCoupon.setBrand(tempBrand);
 
-        couponRepository.save(tempCoupon.get());
+        couponRepository.save(tempCoupon);
 
     }
     // ID 기반으로 쿠폰 삭제
