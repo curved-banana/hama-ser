@@ -23,6 +23,9 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findByBrand(Brand brand, Pageable pageable);
     Page<Coupon> findAllByBrand(long brandId, Pageable pageable);
 
+    List<Coupon> findAllByUser(Long userId);
+
+
     // ========= 쿠폰 이름에 포함된 키워드 찾는 메서드
     Page<Coupon> findByCouponNameContaining(String searchKeyword, Pageable pageable);
     Coupon findByCouponNameContaining(String couponName);

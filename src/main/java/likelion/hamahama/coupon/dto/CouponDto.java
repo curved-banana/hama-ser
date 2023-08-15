@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.enums.Category;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import likelion.hamahama.user.entity.User;
+import lombok.*;
 
 import java.time.LocalDate;
 
 // 쿠폰 등록 및 쿠폰 상세 정보
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CouponDto {
     private long couponId;
     private Category category;
@@ -26,8 +26,9 @@ public class CouponDto {
     private LocalDate endDate;
     private String description;
     private int likeCount;
+    private User user;
 
-    public CouponDto(long couponId, Category category, String couponName, String couponCode, String couponUrl, LocalDate startDate, LocalDate endDate, String description, int likeCount) {
+    public CouponDto(long couponId, Category category, String couponName, String couponCode, String couponUrl, LocalDate startDate, LocalDate endDate, String description, int likeCount, User user) {
         this.couponId = couponId;
         this.category = category;
         this.couponName = couponName;
@@ -37,6 +38,7 @@ public class CouponDto {
         this.endDate = endDate;
         this.description = description;
         this.likeCount = likeCount;
+        this.user = user;
     }
 
     // 쿠폰 정보 조회시, 쿠폰을 쿠폰DTO로 변환하여 반환하기 위해 사용하는것
@@ -51,5 +53,6 @@ public class CouponDto {
         this.endDate = coupon.getEndDate();
         this.description = coupon.getDescription();
         this.likeCount = coupon.getLikeCount();
+        this.user = coupon.getUser();
     }
 }

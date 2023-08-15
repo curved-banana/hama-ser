@@ -3,6 +3,7 @@ package likelion.hamahama.coupon.entity;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.BaseTimeEntity;
+import likelion.hamahama.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,7 +70,11 @@ public class Coupon extends BaseTimeEntity {
     @ColumnDefault("0")
     private int likeCount;
 
-    
+    /**추가 */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id", referencedColumnName = "user_id")
+    private User user;
+
     // 일반적으로 사용
     public Coupon(String couponName, Category category, String couponCode, String couponUrl, LocalDate startDate, LocalDate endDate, String description, int likeCount) {
         this.couponName = couponName;

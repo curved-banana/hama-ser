@@ -9,6 +9,7 @@ import likelion.hamahama.coupon.dto.CouponDto;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.coupon.repository.CouponRepository;
+import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final BrandRepository brandRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     // 브랜드 ID 기반으로 브랜드 찾기
     public Brand findBrandByName(String theName) {
@@ -63,6 +66,7 @@ public class CouponService {
                 couponDto.getEndDate(),
                 couponDto.getDescription(),
                 couponDto.getLikeCount());
+                couponDto.getUser();
 
         tempCoupon.setBrand(tempBrand);
 
@@ -126,6 +130,16 @@ public class CouponService {
         Page<Coupon> couponPage = couponRepository.findAll(pageable);
         Page<CouponDetailDto> couponDetailDtos = couponPage.map((c -> new CouponDetailDto(c)));
         return couponDetailDtos;
+    }
+
+    // 내가 등록한 쿠폰
+    public List<CouponDetailDto> getMyCoupon(Long userId) {
+
+        List<Coupon> mycoupons = couponRepository.findAllByUser(userId);
+
+        List<CouponDetailDto> mycouponsDto = mycoupons.stream()
+                .map( c-> new CouponDetailDto(c)).collect(Collectors.toList());
+        return mycouponsDto;
     }
 
 

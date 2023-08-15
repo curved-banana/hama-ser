@@ -17,6 +17,7 @@ public class CouponDetailDto {
     private LocalDate startDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+    private Long userId;
 
     // private Boolean isLiked;  즐겨찾기된 쿠폰
     // private int likeCount;
@@ -27,5 +28,6 @@ public class CouponDetailDto {
         this.brand = coupon.getBrand();
         this.startDate = coupon.getStartDate();
         this.endDate = coupon.getEndDate();
+        this.userId = coupon.getUser().getId();
     }
 }
