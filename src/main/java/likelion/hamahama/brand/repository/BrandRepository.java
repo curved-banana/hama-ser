@@ -19,6 +19,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
 
     Brand findByBrandName(String theName);
+    Brand findByBrandEnglishName(String theName);
 
     //추가
     Page<Brand> findAllByLikeUsersIn(List<BrandLike> brandLike, Pageable pageable);

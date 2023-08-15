@@ -36,6 +36,9 @@ public class Brand {
     @Column(name="brand_name")
     private String brandName;
 
+    @Column(name="brand_english_name")
+    private String brandEnglishName;
+
     // 브랜드 이미지 URL
     @Column(name="brand_img_url")
     private String brandImgUrl;

@@ -26,21 +26,25 @@ public class BrandService {
     private final UserRepository userRepository;
     private final BrandLikeRepsitory brandLikeRepsitory;
 
+    @Transactional
     public List<Brand> findAll_brand(){
         return brandRepository.findAll();
     }
 
+    @Transactional
     public Optional<Brand> findBrandById(Long brandId){
 
         return brandRepository.findById(brandId);
     }
 
     // 카테고리에 맞는 브랜드 불러오기
+    @Transactional
     public List<Brand> findByCategory(Category category){
         return brandRepository.findByCategory(category);
     }
 
     // 브랜드이름에서 키워드 검색 후 결과 리스트 출력
+    @Transactional
     public List<Brand> findByKeyword(String keyword){
         return brandRepository.findByBrandNameContaining(keyword);
     }
@@ -90,6 +94,7 @@ public class BrandService {
     }
     // ================ 마이페이지에서 브랜드 즐겨찾기 불러오기 =======================
     /** 여기서는 브랜드아이디로 받아와도 되지 않나?*/
+    @Transactional
     public Page<BrandDto> getLikedBrand(Long userId, Pageable pageable){
         User user = userRepository.findById(userId).get();
         List<BrandLike> brandLikes = brandLikeRepsitory.findByUser(user);

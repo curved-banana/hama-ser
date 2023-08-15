@@ -88,10 +88,12 @@ public class CouponController {
     }
 
     //========= 쿠폰 즐겨찾기(이미 즐겨찾기 달려있다면 즐겨찾기 취소)=============
-    @PostMapping("/coupon/{couponId}/like")
-    public CreateResponseMessage likeCoupon(@PathVariable("userId") Long userId, @PathVariable("couponId") Long couponId) {
-        Optional<Coupon> coupon = couponRepository.findById(couponId);
-        User user = userRepository.findById(userId).get();
+    @PostMapping("/coupon/{userId}/{couponId}/like")
+    public CreateResponseMessage likeCoupon(@PathVariable("userId") String userId, @PathVariable("couponId") String couponId) {
+        Long user_id = Long.valueOf(userId);
+        Long coupon_id = Long.valueOf(userId);
+        Optional<Coupon> coupon = couponRepository.findById(coupon_id);
+        User user = userRepository.findById(user_id).get();
         //User user = userService.findUser(email);
         CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user, coupon.get());
         if (couponLike == null) {

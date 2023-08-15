@@ -132,7 +132,9 @@ public class CouponService {
         return couponDetailDtos;
     }
 
+
     // 내가 등록한 쿠폰
+    @Transactional
     public List<CouponDetailDto> getMyCoupon(Long userId) {
 
         List<Coupon> mycoupons = couponRepository.findAllByUser(userId);

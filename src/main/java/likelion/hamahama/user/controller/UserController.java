@@ -69,20 +69,26 @@ public class UserController {
     }
 
     //사용자 기기에 대한 access token을 회원 db에 저장
-    @PostMapping("/saveFcmToken")
+    @PostMapping("user/saveFcmToken")
     public void getFcmToken(@RequestBody SignRequest request){
         Optional<User> user = userRepository.findByEmail(request.getEmail());
 
         if(user.isPresent()){
             user.get().setFcmToken(request.getFcmToken());
+            user.get().setFcmStatus(request.getFcmStatus());
             userRepository.save(user.get());
         }
     }
 
-    @PostMapping("/send")
+    @PostMapping("user/send")
     public void test(@RequestBody FcmRequest request) throws IOException, FirebaseMessagingException {
         fcmService.sendMessageTo(request.getTopic(), request.getTitle(), request.getBody());
     }
+
+//    @GetMapping("user/test")
+//    public void test() throws FirebaseMessagingException {
+//        fcmService.topicCreate();
+//    }
 
 
 

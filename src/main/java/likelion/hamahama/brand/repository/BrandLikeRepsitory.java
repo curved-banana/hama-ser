@@ -6,6 +6,7 @@ import likelion.hamahama.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BrandLikeRepsitory extends JpaRepository<BrandLike, Long> {
 
@@ -13,5 +14,5 @@ public interface BrandLikeRepsitory extends JpaRepository<BrandLike, Long> {
    // BrandLike findByUserAndBrand(User user, Brand brand);
     List<BrandLike> findByUser(User user);
 
-    List<BrandLike> findByBrandId(Long brandId);
+    Optional<List<BrandLike>> findByBrandId(Long brandId);
 }

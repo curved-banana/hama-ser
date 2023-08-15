@@ -13,4 +13,5 @@ public class SignRequest {
     private String email;
     private String password;
     private String fcmToken;
+    private Boolean fcmStatus;
 }

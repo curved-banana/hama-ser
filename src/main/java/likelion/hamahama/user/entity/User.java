@@ -41,6 +41,9 @@ public class User extends BaseTimeEntity {
     @Column(name="fcm_token")
     private String fcmToken;
 
+    @Column(name="fcm_status")
+    private Boolean fcmStatus;
+
     @Convert(converter = StringListConverter.class)
     private List<String> favoriteBrands = new ArrayList<>();
 
@@ -54,7 +57,7 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(
             mappedBy ="user",
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
@@ -65,7 +68,7 @@ public class User extends BaseTimeEntity {
 /**추가 */
     @OneToMany(
             mappedBy ="user",
-            fetch = FetchType.LAZY,
+            fetch =  FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
