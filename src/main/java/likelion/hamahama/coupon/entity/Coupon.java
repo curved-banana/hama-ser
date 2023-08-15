@@ -69,6 +69,7 @@ public class Coupon extends BaseTimeEntity {
     @ColumnDefault("0")
     private int likeCount;
 
+    
     // 일반적으로 사용
     public Coupon(String couponName, Category category, String couponCode, String couponUrl, LocalDate startDate, LocalDate endDate, String description, int likeCount) {
         this.couponName = couponName;
