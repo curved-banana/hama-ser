@@ -13,7 +13,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Data
+@EqualsAndHashCode(callSuper=false)
 @DynamicUpdate
 @Builder
 @NoArgsConstructor
@@ -44,6 +46,7 @@ public class User extends BaseTimeEntity {
     @Column(name="fcm_status")
     private Boolean fcmStatus;
 
+    @Builder.Default
     @Convert(converter = StringListConverter.class)
     private List<String> favoriteBrands = new ArrayList<>();
 
@@ -61,6 +64,7 @@ public class User extends BaseTimeEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
 //    @Fetch(FetchMode.SUBSELECT)
 //    @BatchSize(size = 10)
     private List<CouponLike> likeCoupons = new ArrayList<>();
@@ -72,5 +76,6 @@ public class User extends BaseTimeEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     private List<BrandLike> likeBrand = new ArrayList<>();
 }

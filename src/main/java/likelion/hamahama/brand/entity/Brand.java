@@ -1,6 +1,7 @@
 package likelion.hamahama.brand.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.CouponLike;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Data
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "brand_table")
@@ -46,6 +47,7 @@ public class Brand {
     @Column(name="favorites_status")
     @ColumnDefault("0")
     private boolean favoriteStatus;
+
 
     @OneToMany(mappedBy = "brand",  cascade = CascadeType.ALL)
     private List<Coupon> coupons;

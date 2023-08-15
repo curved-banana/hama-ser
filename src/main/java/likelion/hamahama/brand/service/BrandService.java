@@ -27,7 +27,7 @@ public class BrandService {
     private final BrandLikeRepsitory brandLikeRepsitory;
 
     @Transactional
-    public List<Brand> findAll_brand(){
+    public List<Brand> findAll(){
         return brandRepository.findAll();
     }
 

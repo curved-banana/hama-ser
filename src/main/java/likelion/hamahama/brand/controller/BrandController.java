@@ -12,6 +12,8 @@ import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,14 +31,15 @@ public class BrandController {
 
     // 모든 브랜드 조회
     @GetMapping("/brandList")
-    public List<Brand> findAll_brand() {
-        return brandService.findAll_brand();
+    public ResponseEntity<List<Brand>> findAll() {
+        return new ResponseEntity<>(brandRepository.findAll(), HttpStatus.OK);
     }
 
     // 브랜드 상세 조회
-    @GetMapping("/{brandId}")
-    public BrandDto getBrand(@PathVariable long brandId) {
-        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
+    @GetMapping("")
+    public BrandDto getBrand(@RequestParam(value="brandId") String brandId) {
+        Long brand_id = Long.valueOf(brandId);
+        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brand_id).get());
         return theBrandDTO;
     }
 

@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
 
-    List<Brand> findAll();
+
     Optional<Brand> findById(Long brandId);
 
 
