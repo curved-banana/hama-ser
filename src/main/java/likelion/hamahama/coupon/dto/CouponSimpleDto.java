@@ -15,18 +15,18 @@ public class CouponSimpleDto {
     private int likeCount;
 
 
-    public CouponSimpleDto(Coupon coupon, User user){
-        this.couponId = coupon.getId();
-        this.couponName= coupon.getCouponName();
-        this.couponUrl = coupon.getCouponUrl();
-        this.description = coupon.getDescription();
-        this.isLiked = false;
-        for(CouponLike couponLike:coupon.getLikeUsers()){
-            if(couponLike.getUser().getId() == user.getId()){
-                this.isLiked = true;
-                break;
-            }
-        }
-        this.likeCount = coupon.getLikeUsers().size();
-    }
+//    public CouponSimpleDto(Coupon coupon, User user){
+//        this.couponId = coupon.getId();
+//        this.couponName= coupon.getCouponName();
+//        this.couponUrl = coupon.getCouponUrl();
+//        this.description = coupon.getDescription();
+//        this.isLiked = false;
+//        for(CouponLike couponLike:coupon.getLikeUsers()){
+//            if(couponLike.getUser().getId() == user.getId()){
+//                this.isLiked = true;
+//                break;
+//            }
+//        }
+//        this.likeCount = coupon.getLikeUsers().size();
+//    }
 }

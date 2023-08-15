@@ -35,16 +35,16 @@ public class CouponLike {
 
    /**생성자*/
 
-    public CouponLike(User user, Coupon coupon){
-        this.user = user;
-        this.coupon = coupon;
-        user.getLikeCoupons().add(this);
-        coupon.getLikeUsers().add(this);
-    }
-    public void dislike(){
-        this.user.getLikeCoupons().remove(this);
-        this.user = null;
-        this.coupon.getLikeUsers().remove(this);
-        this.coupon = null;
-    }
+//    public CouponLike(User user, Coupon coupon){
+//        this.user = user;
+//        this.coupon = coupon;
+//        user.getLikeCoupons().add(this);
+//        coupon.getLikeUsers().add(this);
+//    }
+//    public void dislike(){
+//        this.user.getLikeCoupons().remove(this);
+//        this.user = null;
+//        this.coupon.getLikeUsers().remove(this);
+//        this.coupon = null;
+//    }
 }

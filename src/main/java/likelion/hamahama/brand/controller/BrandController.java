@@ -12,6 +12,7 @@ import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BrandController {
 
+    @Autowired
     private final BrandService brandService;
+    @Autowired
     private final BrandRepository brandRepository;
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final  BrandLikeRepsitory brandLikeRepsitory;
 
     // 모든 브랜드 조회
@@ -54,14 +59,15 @@ public class BrandController {
         return theBrandDTO;
     }
     // ============== 브랜드 즐겨찾기 (마이페이지) ================
-    @PostMapping("/mypage/{userId}/{brandId}/edit")
-    public CreateResponseMessage likeBrand(@PathVariable("userId") Long userId, @PathVariable("brandId") Long brandId){
-        Optional<Brand> brand = brandRepository.findById(brandId);
-        User user = userRepository.findById(userId).get();
-        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user, brand.get());
+    @GetMapping("/mypage/{email}/{brandId}/edit")
+    public CreateResponseMessage likeBrand(@PathVariable("email") String email, @PathVariable("brandId") String brandId){
+        Long brand_id = Long.valueOf(brandId);
+        Optional<Brand> brand = brandRepository.findById(brand_id);
+        Optional<User> user = userRepository.findByEmail(email);
+        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user.get(), brand.get());
         if(brandLike == null ){
-            brandService.createBrandFavorite(user, brand.get());
-        }else brandService.deleteBrandFavorite(user, brand.get());
+            brandService.createBrandFavorite(user.get(), brand.get());
+        }else brandService.deleteBrandFavorite(user.get(), brand.get());
         return new CreateResponseMessage((long) 200, "좋아요 성공");
     }
     // ============== 카테고리에 맞는 브랜드 찾기 =============

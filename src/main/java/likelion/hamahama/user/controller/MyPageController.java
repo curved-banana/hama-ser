@@ -41,26 +41,26 @@ public class MyPageController {
 
 
     // 즐겨찾기한 쿠폰
-    @GetMapping("/mypage/likeCoupon")
-    public Page<CouponDetailDto> getMyLikedCoupons(User user, Pageable pageable){
-       String email = user.getEmail();
-       Long user_id = userService.findUserOne(email).getId();
-
-       Page<CouponDetailDto> likedCoupons = couponLikeService.getLikedCoupon(user_id,pageable);
-       return likedCoupons;
-
-    }
-
-    // 즐겨찾기한 브랜드들 
-    @GetMapping("/mypage/likeBrand")
-    public Page<BrandDto> getMyLikedBrands(User user, Pageable pageable){
-        String email = user.getEmail();
-        Long user_id = userService.findUserOne(email).getId();
-
-        Page<BrandDto> likedBrands = brandService.getLikedBrand(user_id, pageable);
-
-        return likedBrands;
-    }
+//    @GetMapping("/mypage/likeCoupon")
+//    public Page<CouponDetailDto> getMyLikedCoupons(User user, Pageable pageable){
+//       String email = user.getEmail();
+//       Long user_id = userService.findUserOne(email).getId();
+//
+//       Page<CouponDetailDto> likedCoupons = couponLikeService.getLikedCoupon(user_id,pageable);
+//       return likedCoupons;
+//
+//    }
+//
+//    // 즐겨찾기한 브랜드들
+//    @GetMapping("/mypage/likeBrand")
+//    public Page<BrandDto> getMyLikedBrands(User user, Pageable pageable){
+//        String email = user.getEmail();
+//        Long user_id = userService.findUserOne(email).getId();
+//
+//        Page<BrandDto> likedBrands = brandService.getLikedBrand(user_id, pageable);
+//
+//        return likedBrands;
+//    }
 
     // 내가 작성한 댓글 불러오기
     @GetMapping("/mypage/createComment")

@@ -49,33 +49,33 @@ public class Brand {
     private boolean favoriteStatus;
 
 
-    @OneToMany(mappedBy = "brand",  cascade = CascadeType.ALL)
-    private List<Coupon> coupons;
+//    @OneToMany(mappedBy = "brand",  cascade = CascadeType.ALL)
+//    private List<Coupon> coupons;
 
     /**추가*/
-    @OneToMany(
-            mappedBy = "brand",
-            cascade =  CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<BrandLike> likeUsers = new ArrayList<>();
+//    @OneToMany(
+//            mappedBy = "brand",
+//            cascade =  CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+//    private List<BrandLike> likeUsers = new ArrayList<>();
     /**========================*/
 //    public Brand(){
 //    }
 
-    public Brand(Category category, String brandName, String brandImgUrl) {
-        this.category = category;
-        this.brandName = brandName;
-        this.brandImgUrl = brandImgUrl;
-    }
-    /** (추가) 즐겨찾기 상태 변화 */
-    public void updateFavoriteStatus(){
-        if(!likeUsers.isEmpty()){
-            favoriteStatus = true;
-        } else{
-            favoriteStatus = false;
-        }
-    }
+//    public Brand(Category category, String brandName, String brandImgUrl) {
+//        this.category = category;
+//        this.brandName = brandName;
+//        this.brandImgUrl = brandImgUrl;
+//    }
+//    /** (추가) 즐겨찾기 상태 변화 */
+//    public void updateFavoriteStatus(){
+//        if(!likeUsers.isEmpty()){
+//            favoriteStatus = true;
+//        } else{
+//            favoriteStatus = false;
+//        }
+//    }
 
 
 

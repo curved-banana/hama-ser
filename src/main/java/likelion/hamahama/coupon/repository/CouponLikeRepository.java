@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface CouponLikeRepository extends JpaRepository< CouponLike, Long> {
 
     List<CouponLike> findByUser(User user);
+
+    List<Long> findByUserId(Long userId);
     CouponLike findOneByUserAndCoupon(User user, Coupon coupon);
 
     @Modifying

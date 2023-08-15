@@ -35,7 +35,7 @@ public class Coupon extends BaseTimeEntity {
     private String couponName;
 
     @ManyToOne
-    @JoinColumn(name="brand_id")
+    @JoinColumn(name="brand_id", referencedColumnName = "brand_id")
     private Brand brand;
 
     @Enumerated(EnumType.STRING)
@@ -59,12 +59,12 @@ public class Coupon extends BaseTimeEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @OneToMany(
-            mappedBy = "coupon",
-            cascade =  CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<CouponLike> likeUsers = new ArrayList<>();
+//    @OneToMany(
+//            mappedBy = "coupon",
+//            cascade =  CascadeType.ALL,
+//            orphanRemoval = true
+//    )
+//    private List<CouponLike> likeUsers = new ArrayList<>();
 
     @Column(name="likeCount")
     @ColumnDefault("0")

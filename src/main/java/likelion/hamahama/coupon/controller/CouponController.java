@@ -54,6 +54,10 @@ public class CouponController {
         return couponService.findCouponById(requestCouponId);
     }
 
+    @GetMapping("/coupons")
+    public List<Coupon> findAll(){
+        return couponRepository.findAll();
+    }
     //================================
 
     // 쿠폰 등록
@@ -88,17 +92,16 @@ public class CouponController {
     }
 
     //========= 쿠폰 즐겨찾기(이미 즐겨찾기 달려있다면 즐겨찾기 취소)=============
-    @PostMapping("/coupon/{userId}/{couponId}/like")
-    public CreateResponseMessage likeCoupon(@PathVariable("userId") String userId, @PathVariable("couponId") String couponId) {
-        Long user_id = Long.valueOf(userId);
-        Long coupon_id = Long.valueOf(userId);
+    @PostMapping("/coupon/{email}/{couponId}/like")
+    public CreateResponseMessage likeCoupon(@PathVariable("email") String email, @PathVariable("couponId") String couponId) {
+        Long coupon_id = Long.valueOf(couponId);
         Optional<Coupon> coupon = couponRepository.findById(coupon_id);
-        User user = userRepository.findById(user_id).get();
+        Optional<User> user = userRepository.findByEmail(email);
         //User user = userService.findUser(email);
-        CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user, coupon.get());
+        CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user.get(), coupon.get());
         if (couponLike == null) {
-            couponLikeService.createCouponLike(user, coupon.get());
-        } else couponLikeService.deleteCouponLike(user, coupon.get());
+            couponLikeService.createCouponLike(user.get(), coupon.get());
+        } else couponLikeService.deleteCouponLike(user.get(), coupon.get());
         return new CreateResponseMessage((long) 200, "좋아요 성공");
     }
 

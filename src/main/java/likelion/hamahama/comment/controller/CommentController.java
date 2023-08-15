@@ -3,6 +3,8 @@ package likelion.hamahama.comment.controller;
 import likelion.hamahama.comment.dto.CommentRequestDto;
 import likelion.hamahama.comment.dto.CommentDto;
 
+import likelion.hamahama.comment.entity.Comment;
+import likelion.hamahama.comment.repository.CommentRepository;
 import likelion.hamahama.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
 
 
@@ -53,6 +55,10 @@ public class CommentController {
             return commentService.findAllComment(pageable);
     }
 
+    @GetMapping("/comments/all")
+    public List<Comment> commentsAll(){
+        return commentRepository.findAll();
+    }
     @GetMapping("/comments")
     public ResponseEntity<List<CommentDto>> getAllComments(@RequestParam String email){
         return new ResponseEntity<>(

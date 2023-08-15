@@ -37,7 +37,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     Page<Coupon> findByLikeCount(Integer likeCount, Pageable pageable);
 
     // 추가=
-    Page<Coupon> findAllByLikeUsersIn(List<CouponLike> couponLike, Pageable pageable);
+    //Page<Coupon> findAllByLikeUsersIn(List<CouponLike> couponLike, Pageable pageable);
     //태현
 
 

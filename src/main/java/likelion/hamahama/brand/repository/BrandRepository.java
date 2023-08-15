@@ -22,7 +22,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     Brand findByBrandEnglishName(String theName);
 
     //추가
-    Page<Brand> findAllByLikeUsersIn(List<BrandLike> brandLike, Pageable pageable);
+    //Page<Brand> findAllByLikeUsersIn(List<BrandLike> brandLike, Pageable pageable);
 
     //카테고리별 브랜드 검색
     List<Brand> findByCategory(Category category);
