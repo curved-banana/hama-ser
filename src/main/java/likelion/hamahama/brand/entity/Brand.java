@@ -9,6 +9,7 @@ import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Entity
 @Data
+@DynamicUpdate
 //@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,9 +46,9 @@ public class Brand {
     @Column(name="brand_img_url")
     private String brandImgUrl;
 
-    @Column(name="favorites_status")
-    @ColumnDefault("0")
-    private boolean favoriteStatus;
+//    @Column(name="favorites_status")
+//    @ColumnDefault("0")
+//    private boolean favoriteStatus;
 
 
 //    @OneToMany(mappedBy = "brand",  cascade = CascadeType.ALL)

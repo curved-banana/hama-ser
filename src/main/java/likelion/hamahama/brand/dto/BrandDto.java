@@ -31,7 +31,6 @@ public class BrandDto {
         this.category = brand.getCategory();
         this.brandName = brand.getBrandName();
         this.brandImgUrl = brand.getBrandImgUrl();
-        this.favoirteStatus = brand.isFavoriteStatus();
     }
     public BrandDto(String brandName, String brandImgUrl) {
         this.brandName = brandName;

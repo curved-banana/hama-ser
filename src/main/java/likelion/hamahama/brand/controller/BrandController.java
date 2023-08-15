@@ -41,14 +41,15 @@ public class BrandController {
     }
 
     // 브랜드 상세 조회
-    @GetMapping("")
-    public BrandDto getBrand(@RequestParam(value="brandId") String brandId) {
-        Long brand_id = Long.valueOf(brandId);
-        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brand_id).get());
-        return theBrandDTO;
-    }
+//    @GetMapping("")
+//    public BrandDto getBrand(@RequestParam(value="brandId") String brandId) {
+//        Long brand_id = Long.valueOf(brandId);
+//        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brand_id).get());
+//        return theBrandDTO;
+//    }
 
-    @GetMapping("/brands/{brandId}")
+    //단일 브랜드 조회
+    @GetMapping("/{brandId}")
     public BrandDto getBrand(@PathVariable Long brandId){
         BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
 
@@ -58,18 +59,7 @@ public class BrandController {
 
         return theBrandDTO;
     }
-    // ============== 브랜드 즐겨찾기 (마이페이지) ================
-    @GetMapping("/mypage/{email}/{brandId}/edit")
-    public CreateResponseMessage likeBrand(@PathVariable("email") String email, @PathVariable("brandId") String brandId){
-        Long brand_id = Long.valueOf(brandId);
-        Optional<Brand> brand = brandRepository.findById(brand_id);
-        Optional<User> user = userRepository.findByEmail(email);
-        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user.get(), brand.get());
-        if(brandLike == null ){
-            brandService.createBrandFavorite(user.get(), brand.get());
-        }else brandService.deleteBrandFavorite(user.get(), brand.get());
-        return new CreateResponseMessage((long) 200, "좋아요 성공");
-    }
+
     // ============== 카테고리에 맞는 브랜드 찾기 =============
     @GetMapping("/{category}")
     public List<Brand> brandByCategory(Category category){
