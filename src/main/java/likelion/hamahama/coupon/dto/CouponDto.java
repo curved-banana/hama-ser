@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.enums.Category;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +13,6 @@ import java.time.LocalDate;
 
 // 쿠폰 등록 및 쿠폰 상세 정보
 @Data
-@Getter
-@Setter
 public class CouponDto {
     private long couponId;
     private Category category;

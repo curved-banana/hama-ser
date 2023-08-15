@@ -67,7 +67,7 @@ public class SecurityConfig {
                 // /admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 // /user 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
-                .antMatchers("/api/user/**", "api/users/**").hasRole("USER")
+                .antMatchers("/api/user/**", "/api/users/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                  //JWT 인증 필터 적용

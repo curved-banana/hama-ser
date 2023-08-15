@@ -54,18 +54,18 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(
             mappedBy ="user",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 10)
+//    @Fetch(FetchMode.SUBSELECT)
+//    @BatchSize(size = 10)
     private List<CouponLike> likeCoupons = new ArrayList<>();
 
 /**추가 */
     @OneToMany(
             mappedBy ="user",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )

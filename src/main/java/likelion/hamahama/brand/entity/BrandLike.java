@@ -2,13 +2,14 @@ package likelion.hamahama.brand.entity;
 
 import likelion.hamahama.user.entity.User;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="favorites_brand_table")
 public class BrandLike {

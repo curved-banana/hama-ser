@@ -44,7 +44,7 @@ public class Brand {
     @ColumnDefault("0")
     private boolean favoriteStatus;
 
-    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand",  cascade = CascadeType.ALL)
     private List<Coupon> coupons;
 
     /**추가*/

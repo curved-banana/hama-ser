@@ -12,4 +12,6 @@ public interface BrandLikeRepsitory extends JpaRepository<BrandLike, Long> {
     BrandLike findOneByUserAndBrand(User user, Brand brand);
    // BrandLike findByUserAndBrand(User user, Brand brand);
     List<BrandLike> findByUser(User user);
+
+    List<BrandLike> findByBrandId(Long brandId);
 }

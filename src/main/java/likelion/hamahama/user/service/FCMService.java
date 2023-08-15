@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.messaging.*;
+import likelion.hamahama.brand.entity.BrandLike;
+import likelion.hamahama.brand.repository.BrandLikeRepsitory;
 import likelion.hamahama.user.dto.FCMMessageDto;
 import likelion.hamahama.user.dto.FcmRequest;
 import likelion.hamahama.brand.entity.Brand;
@@ -39,6 +41,9 @@ public class FCMService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BrandLikeRepsitory brandLikeRepsitory;
+
     public String getAccessToken() throws IOException {
         String firebaseConfigPath = "templates/firebase-admin.json";
 
@@ -71,20 +76,6 @@ public class FCMService {
         //sendWebPush(targetToken, title, body);
     }
 
-//    public void sendWebPush(String targetToken, String title, String body) throws IOException{
-//        String request = makeRequest(targetToken, title, body);
-//
-//        OkHttpClient client = new OkHttpClient();
-//        RequestBody requestBody =  RequestBody.create(request,
-//                MediaType.get("application/json; charset=utf-8"));
-//        Request request2 = new Request.Builder()
-//                .url("http://localhost:8088/notification/send")
-//                .post(requestBody)
-//                .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
-//                .build();
-//        Response response2 = client.newCall(request2).execute();
-//        System.out.println(response2.body().string());
-//    }
 
     public String makeMessage(String topic, String title, String body) throws JsonProcessingException{
         FCMMessageDto fcmMessageDto = FCMMessageDto.builder()
@@ -103,12 +94,11 @@ public class FCMService {
     public void topicCreate() throws FirebaseMessagingException {
 
         List<String> brandNames = new ArrayList<>();
-        List<Brand> brands = brandRepository.findAll();
-        List<User> users = userRepository.findAll();
+        List<BrandLike> brandLikes = brandLikeRepsitory.findAll();
 
-        brands.forEach(brand -> {
-            if(brand.isFavoriteStatus()){
-                brandNames.add(brand.getBrandName());
+        brandLikes.forEach(brandLike -> {
+            if( !brandNames.contains(brandLike.getBrand().getBrandName())){
+                brandNames.add(brandLike.getBrand().getBrandName());
             }
         });
 
@@ -116,10 +106,12 @@ public class FCMService {
             List<String> registrationTokens = new ArrayList<>();
             String topic = brandNames.get(i);
 
-            users.forEach(user -> {
-                if(user.getFavoriteBrands().contains(topic)){
-                    registrationTokens.add(user.getFcmToken());
-                }
+            Brand brand= brandRepository.findByBrandName(topic);
+            // 브랜드 즐겨찾기 테이블에서 주제로 설정한 브랜드에 해당하는 모든 행
+            List<BrandLike> brand_likes_list = brandLikeRepsitory.findByBrandId(brand.getId());
+
+            brand_likes_list.forEach(list -> {
+                registrationTokens.add(list.getUser().getFcmToken());
             });
 
             LinkedHashSet<String> li_hs = new LinkedHashSet<String>(registrationTokens);
@@ -128,45 +120,6 @@ public class FCMService {
 
             TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(registrationTokens, topic);
         }
-//        List<String> registrationTokens = Arrays.asList(
-//                "f0oNEr_D5vTUKO6341XdcN:APA91bF8UTkXzVsPJIdX8oV-0wpqLbj_jObWX7O1X5ZkG5vlt56Yg4cHHtd2EeETzfNR28ZYelxWEZMGFvOOSHOoUKJnK68WlomKqFJDr2iliEHB3vwEMzAVVWxINxR5dKKHcXzQzwm0",
-//                "fm840FzQmULuU2LDf3modu:APA91bG5c5g7jdIeuZpduBsbbW3NNt8O8HA7wJGxKTCP6YuVbsM8QBQYF8xlwmeDI0idBc-tcLmy8OMr1pROMZj3n6miU2lcaR9yKbIP9R0no4MGEiMx4YaKWjG2FXsx2P1sB4w4Xt5r"
-//        );
-//        String topic = "animal";
-//        TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(registrationTokens, topic);
-//        System.out.println(response.getSuccessCount() + " tokens were subscribed successfully");
     }
-
-//    private String makeRequest(String targetToken, String title, String body) throws IOException{
-//        FcmRequest fcmRequest = FcmRequest.builder()
-//                .token(targetToken)
-//                .title(title)
-//                .body(body)
-//                .build();
-//
-//        return objectMapper.writeValueAsString(fcmRequest);
-//    }
-
-//    public String sendNotificationByToken(FCMMessageDto fcmMessageDto){
-//
-//        Notification notification = Notification.builder()
-//                .setTitle(fcmMessageDto.getTitle())
-//                .setBody(fcmMessageDto.getBody())
-//                .build();
-//
-//        Message message = Message.builder()
-//                .setToken(fcmMessageDto.getToken())
-//                .setNotification(notification)
-//                .build();
-//
-//        try{
-//            firebaseMessaging.send(message);
-//            System.out.println("message " + message);
-//            return "Success Sending Notification";
-//        }catch(FirebaseMessagingException e){
-//            e.printStackTrace();
-//            return "Error Sending Notification";
-//        }
-//    }
 
 }
