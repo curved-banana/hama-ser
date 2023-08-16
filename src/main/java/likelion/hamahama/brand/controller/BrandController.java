@@ -60,7 +60,7 @@ public class BrandController {
         return theBrandDTO;
     }
 
-    // ============== 카테고리에 맞는 브랜드 찾기 =============
+    // ============== 카테고리에 맞는 브랜드 찾기 =============.
     @GetMapping("/category/{category}")
     public List<Brand> brandByCategory(@PathVariable String category){
         return brandService.findByCategory(Category.valueOf(category));
