@@ -89,6 +89,7 @@ public class CouponService {
         tempCoupon.get().setDescription(couponDto.getDescription());
         tempCoupon.get().setLikeCount(couponDto.getLikeCount());
         tempCoupon.get().setBrand(tempBrand);
+        tempCoupon.get().setUser(couponDto.getUser());
 
         couponRepository.save(tempCoupon.get());
 
