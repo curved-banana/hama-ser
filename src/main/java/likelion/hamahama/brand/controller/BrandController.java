@@ -61,9 +61,9 @@ public class BrandController {
     }
 
     // ============== 카테고리에 맞는 브랜드 찾기 =============
-    @GetMapping("/{category}")
-    public List<Brand> brandByCategory(Category category){
-        return brandService.findByCategory(category);
+    @GetMapping("/category/{category}")
+    public List<Brand> brandByCategory(@PathVariable String category){
+        return brandService.findByCategory(Category.valueOf(category));
     }
 
     // ============= 브랜드 검색 시 브랜드 출력 ==============
