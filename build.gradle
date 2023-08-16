@@ -4,10 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
-jar {
-	enabled = false
-}
-
 group = 'likelion'
 version = '0.0.1-SNAPSHOT'
 
@@ -60,4 +56,8 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+}
+
+jar {
+	enabled = false
 }
