@@ -47,7 +47,7 @@ spring:
           google:
             client-id: 620643424996-qpm2d4efe6c1079fi67a3th9bpg1tu8f.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: http://localhost:8088/login/oauth2/code/google
+            redirect-uri: http://ec2-43-202-132-83.ap-northeast-2.compute.amazonaws.com:8088/login/oauth2/code/google
             token-uri: https://oauth2.googleapis.com/token
             resource-uri: https:www.googleapis.com/oauth2/v2/userinfo
             scope:
