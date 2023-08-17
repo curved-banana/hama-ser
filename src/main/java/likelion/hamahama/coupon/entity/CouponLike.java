@@ -2,14 +2,12 @@ package likelion.hamahama.coupon.entity;
 
 import likelion.hamahama.user.entity.User;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @Builder
-@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name="favorites_table")
@@ -30,10 +28,10 @@ public class CouponLike {
 
     // ===쿠폰 사용여부 상태 ==
     // 쿠폰 만족 = 0 /1
-    private Boolean satisfied;
+    private boolean satisfied;
 
     // 쿠폰 불만족 = 0 /1
-    private Boolean unsatisfied;
+    private boolean unsatisfied;
 
    /**생성자*/
 

@@ -12,6 +12,9 @@ import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,28 +25,32 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BrandController {
 
+    @Autowired
     private final BrandService brandService;
+    @Autowired
     private final BrandRepository brandRepository;
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final  BrandLikeRepsitory brandLikeRepsitory;
 
     // 모든 브랜드 조회
     @GetMapping("/brandList")
-    public List<Brand> findAll_brand() {
-        return brandService.findAll_brand();
+    public ResponseEntity<List<Brand>> findAll() {
+        return new ResponseEntity<>(brandRepository.findAll(), HttpStatus.OK);
     }
 
     // 브랜드 상세 조회
+//    @GetMapping("")
+//    public BrandDto getBrand(@RequestParam(value="brandId") String brandId) {
+//        Long brand_id = Long.valueOf(brandId);
+//        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brand_id).get());
+//        return theBrandDTO;
+//    }
+
+    //단일 브랜드 조회
     @GetMapping("/{brandId}")
-    public BrandDto getBrand(@PathVariable long brandId) {
-        BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
-        return theBrandDTO;
-    }
-
-
-    //단일 브랜드 조회 (사용 x)
-    @GetMapping("")
-    public BrandDto getBrand(@RequestParam(value="brandId") Long brandId){
+    public BrandDto getBrand(@PathVariable Long brandId){
         BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
 
         if(theBrandDTO == null){
@@ -52,32 +59,22 @@ public class BrandController {
 
         return theBrandDTO;
     }
-    // ============== 브랜드 즐겨찾기 (마이페이지) ================
-    @PostMapping("/mypage/{userId}/{brandId}/edit")
-    public CreateResponseMessage likeBrand(@PathVariable("userId") Long userId, @PathVariable("brandId") Long brandId){
-        Optional<Brand> brand = brandRepository.findById(brandId);
-        User user = userRepository.findById(userId).get();
-        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user, brand.get());
-        if(brandLike == null ){
-            brandService.createBrandFavorite(user, brand.get());
-        }else brandService.deleteBrandFavorite(user, brand.get());
-        return new CreateResponseMessage((long) 200, "좋아요 성공");
-    }
 
     // ============== 카테고리에 맞는 브랜드 찾기 =============.
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public List<Brand> brandByCategory(@PathVariable String category){
         return brandService.findByCategory(Category.valueOf(category));
     }
 
     // ============= 브랜드 검색 시 브랜드 출력 ==============
-    public List<Brand> findBrandByKeyword(@PathVariable String keyword){
+    @GetMapping("/search/brand")
+    public List<Brand> findBrandByKeyword(@RequestParam String keyword){
         List<Brand> brandlist = brandService.findByKeyword(keyword);
         return brandlist;
     }
 
 
-    // 브랜드 삭제 (
+    // 브랜드 삭제
     @DeleteMapping("/brands/{brandId}")
     public String deleteBrand(@PathVariable Long brandId){
         Optional<Brand> tempBrand = brandService.findBrandById(brandId);

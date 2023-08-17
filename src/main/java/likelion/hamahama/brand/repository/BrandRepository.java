@@ -14,18 +14,15 @@ import java.util.Optional;
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 
 
-    List<Brand> findAll();
 
-    Optional<Brand> findByBrandId(Long brandId);
-    Brand deleteByBrandId(Long brandId);
+    Optional<Brand> findById(Long brandId);
 
 
     Brand findByBrandName(String theName);
-
-    Brand findByBrandEnglishName(String brandEnglishName);
+    Brand findByBrandEnglishName(String theName);
 
     //추가
-    Page<Brand> findAllByLikeUsersIn(List<BrandLike> brandLike, Pageable pageable);
+    //Page<Brand> findAllByLikeUsersIn(List<BrandLike> brandLike, Pageable pageable);
 
     //카테고리별 브랜드 검색
     List<Brand> findByCategory(Category category);
