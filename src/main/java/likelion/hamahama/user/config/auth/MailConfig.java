@@ -1,6 +1,5 @@
 package likelion.hamahama.user.config.auth;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,19 +10,13 @@ import java.util.Properties;
 @Configuration
 public class MailConfig {
 
-    @Value("${spring.mail.username}")
-    private String username;
-
-    @Value("${spring.mail.password}")
-    private String password;
-
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost("smtp.naver.com");
-        javaMailSender.setUsername(username);
-        javaMailSender.setPassword(password);
+        javaMailSender.setUsername("hamahama0818@naver.com");
+        javaMailSender.setPassword("hamahama0819!");
 
         javaMailSender.setPort(465);
 

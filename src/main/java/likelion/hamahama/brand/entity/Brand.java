@@ -1,7 +1,6 @@
 package likelion.hamahama.brand.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.CouponLike;
@@ -9,7 +8,6 @@ import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,8 +15,7 @@ import java.util.List;
 
 @Entity
 @Data
-@DynamicUpdate
-//@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "brand_table")
@@ -28,7 +25,7 @@ public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="brand_id")
-    private Long id;
+    private Long brandId;
 
     // 카테고리(enum으로 선언하기)
     @Column(name="category")
@@ -46,38 +43,37 @@ public class Brand {
     @Column(name="brand_img_url")
     private String brandImgUrl;
 
-//    @Column(name="favorites_status")
-//    @ColumnDefault("0")
-//    private boolean favoriteStatus;
+    @Column(name="favorites_status")
+    @ColumnDefault("0")
+    private boolean favoriteStatus;
 
-
-//    @OneToMany(mappedBy = "brand",  cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    private List<Coupon> coupons;
-
-    /**추가*/
+//
+//    /**추가*/
 //    @OneToMany(
 //            mappedBy = "brand",
 //            cascade =  CascadeType.ALL,
 //            orphanRemoval = true
 //    )
 //    private List<BrandLike> likeUsers = new ArrayList<>();
-    /**========================*/
+//    /**========================*/
 //    public Brand(){
 //    }
 
-//    public Brand(Category category, String brandName, String brandImgUrl) {
-//        this.category = category;
-//        this.brandName = brandName;
-//        this.brandImgUrl = brandImgUrl;
-//    }
-//    /** (추가) 즐겨찾기 상태 변화 */
-//    public void updateFavoriteStatus(){
-//        if(!likeUsers.isEmpty()){
-//            favoriteStatus = true;
-//        } else{
-//            favoriteStatus = false;
-//        }
-//    }
+    public Brand(Category category, String brandName, String brandImgUrl) {
+        this.category = category;
+        this.brandName = brandName;
+        this.brandImgUrl = brandImgUrl;
+    }
+    /** (추가) 즐겨찾기 상태 변화 */
+    public void updateFavoriteStatus(){
+        if(!likeUsers.isEmpty()){
+            favoriteStatus = true;
+        } else{
+            favoriteStatus = false;
+        }
+    }
 
 
 

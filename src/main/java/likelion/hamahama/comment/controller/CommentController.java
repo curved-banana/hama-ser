@@ -3,7 +3,6 @@ package likelion.hamahama.comment.controller;
 import likelion.hamahama.comment.dto.CommentRequestDto;
 import likelion.hamahama.comment.dto.CommentDto;
 
-import likelion.hamahama.comment.entity.Comment;
 import likelion.hamahama.comment.repository.CommentRepository;
 import likelion.hamahama.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +21,13 @@ import java.util.List;
 @RequestMapping("/api")
 public class CommentController {
 
-    private final CommentService commentService;
+    @Autowired
+    private CommentService commentService;
+
     private final CommentRepository commentRepository;
 
 
+    //댓글 생성
 
     @PostMapping("/comment/create")
     public void saveComment(@RequestBody CommentDto request){
@@ -36,7 +38,7 @@ public class CommentController {
 
     //유저가 작성한 쿠폰 하나의 댓글조회
     @PostMapping("/comment")
-    public ResponseEntity<CommentDto> getComment(@RequestBody CommentDto request){
+    public ResponseEntity<CommentRequestDto> getComment(@RequestBody CommentDto request){
 
 
         return new ResponseEntity<>(
@@ -50,27 +52,26 @@ public class CommentController {
         return commentService.commentListBy(pageable,orderCriteria);
     }
 
+
     @GetMapping("comment/list")
     public Page<CommentRequestDto> commentList(Pageable pageable){
             return commentService.findAllComment(pageable);
     }
 
-    @GetMapping("/comments/all")
-    public List<Comment> commentsAll(){
-        return commentRepository.findAll();
-    }
     @GetMapping("/comments")
     public ResponseEntity<List<CommentDto>> getAllComments(@RequestParam String email){
         return new ResponseEntity<>(
                 commentService.getAllComments(email), HttpStatus.OK);
     }
 
+    //한 쿠폰에 해당하는 댓글목록
     @GetMapping("/comments/{couponId}")
     public ResponseEntity<List<CommentDto>> getAllCommentsByCouponId(@PathVariable String couponId){
         Long request = Long.valueOf(couponId);
         return new ResponseEntity<>(commentService.getAllCommentsByCouponId(request), HttpStatus.OK);
     }
 
+    //댓글 수정
     @PostMapping("comment/update")
     public void updateComment(@RequestBody CommentDto request){
         commentService.updateComment(request.getUserEmail(), request.getCouponName(), request.getComment());

@@ -4,10 +4,7 @@ import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.BaseTimeEntity;
 import likelion.hamahama.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,9 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @DynamicInsert
 @Table(name="coupon_table")
 public class Coupon extends BaseTimeEntity {
@@ -28,18 +26,15 @@ public class Coupon extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="coupon_id")
-    private Long id;
+    private Long couponId;
 
     // 쿠폰이름
     @Column(name="CouponName")
     private String couponName;
 
     @ManyToOne
-    @JoinColumn(name="brand_id", referencedColumnName = "brand_id")
+    @JoinColumn(name="brand_id")
     private Brand brand;
-
-    @Enumerated(EnumType.STRING)
-    private Category category;
 
     // 쿠폰코드
     @Column(name="CouponCode")
@@ -52,38 +47,41 @@ public class Coupon extends BaseTimeEntity {
 
     //== 쿠폰 유효기간 ==
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private String startDate;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    private String endDate;
 
+//<<<<<<< Updated upstream
 //    @OneToMany(
 //            mappedBy = "coupon",
 //            cascade =  CascadeType.ALL,
 //            orphanRemoval = true
 //    )
 //    private List<CouponLike> likeUsers = new ArrayList<>();
+//=======
+//>>>>>>> Stashed changes
 
-    @Column(name="likeCount")
+    @Column(name="popularity")
     @ColumnDefault("0")
-    private int likeCount;
+    private int popularity;
 
     /**추가 */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", referencedColumnName = "user_id")
     private User user;
 
-    // 일반적으로 사용
-    public Coupon(String couponName, Category category, String couponCode, String couponUrl, LocalDate startDate, LocalDate endDate, String description, int likeCount) {
+
+     //일반적으로 사용
+    public Coupon(String couponName ,String couponCode, String couponUrl, String startDate, String endDate, String description, int popularity) {
+
         this.couponName = couponName;
-        this.category = category;
         this.couponCode = couponCode;
         this.couponUrl = couponUrl;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
-        this.likeCount = likeCount;
+
+        this.popularity = popularity;
     }
 }

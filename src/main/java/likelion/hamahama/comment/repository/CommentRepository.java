@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Optional<Comment> findByUserIdAndCouponId(Long userId, Long couponId);
+    Optional<Comment> findByUserAndCoupon(User user, Coupon coupon);
 
     // 전체 조회 (추가)
     Page<Comment> findAll(Pageable pageable);
@@ -21,8 +21,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
    // List<Comment> findByCouponId(Long couponId);
     //Page<Comment> findByCouponId(Long couponId);
 
-    Optional<List<Comment>> findByUserId(Long userId);
+    Optional<List<Comment>> findByUser(User user);
 
-    Optional<List<Comment>> findByCouponId(Long couponId);
+    Optional<List<Comment>> findByCoupon(Coupon coupon);
 
 }

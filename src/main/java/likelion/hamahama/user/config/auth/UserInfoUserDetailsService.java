@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserInfoUserDetailsService implements UserDetailsService {
+public class UserInfoUserDetailsService implements UserDetailsService{
 
     @Autowired
     private UserRepository userRepository;
@@ -21,7 +24,6 @@ public class UserInfoUserDetailsService implements UserDetailsService {
 
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User user = userRepository.findByEmail(username).orElseThrow(
@@ -30,4 +32,5 @@ public class UserInfoUserDetailsService implements UserDetailsService {
         System.out.println("user " + user);
         return new UserInfoUserDetails(user);
     }
+
 }

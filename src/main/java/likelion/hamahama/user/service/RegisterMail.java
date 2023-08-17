@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
@@ -32,7 +31,6 @@ public class RegisterMail{
     private final UserRepository userRepository;
     private String ePw;
 
-    @Transactional
     private MimeMessage createReceiveCodeMessage(String code, String email) throws Exception{
         Optional<User> user = userRepository.findByEmail(email);
         String nickname = user.get().getNickname();
@@ -48,7 +46,7 @@ public class RegisterMail{
 
         return message;
     }
-    @Transactional
+
     private MimeMessage createPasswordChangeMessage(String email) throws Exception{
         Optional<User> user = userRepository.findByEmail(email);
         String nickname = user.get().getNickname();
@@ -64,20 +62,20 @@ public class RegisterMail{
 
         return  message;
     }
-    @Transactional
+
     public String setReceiveCodeContext(String code, String nickname){
         Context context = new Context();
         context.setVariable("code", code);
         context.setVariable("nickname", nickname);
         return templateEngine.process("mail", context);
     }
-    @Transactional
+
     public String setPasswordChangeContext(String nickname){
         Context context = new Context();
         context.setVariable("nickname", nickname);
         return templateEngine.process("passwordChange", context);
     }
-    @Transactional
+
     public String createKey() {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
@@ -104,7 +102,6 @@ public class RegisterMail{
         return key.toString();
     }
 
-    @Transactional
     public String sendReceiveCodeMessage(String email)  throws Exception {
         ePw = createKey();
 
@@ -117,7 +114,7 @@ public class RegisterMail{
         }
         return ePw;
     }
-    @Transactional
+
     public void sendPasswordResetUrl(String email)  throws Exception {
         ePw = createKey();
 

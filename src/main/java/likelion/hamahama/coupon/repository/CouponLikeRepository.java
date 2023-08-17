@@ -14,16 +14,19 @@ public interface CouponLikeRepository extends JpaRepository< CouponLike, Long> {
 
     List<CouponLike> findByUser(User user);
 
-    List<Long> findByUserId(Long userId);
+
+    List<CouponLike> findByCoupon(Coupon coupon);
+    //List<Long> findByUserId(Long userId);
+
     CouponLike findOneByUserAndCoupon(User user, Coupon coupon);
 
     @Modifying
-    @Query("update Coupon c set c.likeCount = c.likeCount + 1 where c.id = :coupon_id")
-    void increaseLikeCount(@Param("coupon_id") Long couponId);
+    @Query("update Coupon c set c.popularity = c.popularity + 1 where c.id = :coupon_id")
+    void increasePopularity(@Param("coupon_id") Long couponId);
 
     @Modifying
-    @Query("update Coupon c set c.likeCount = c.likeCount - 1 where c.id = :coupon_id")
-    void decreaseLikeCount(@Param("coupon_id") Long couponId);
+    @Query("update Coupon c set c.popularity = c.popularity - 1 where c.id = :coupon_id")
+    void decreasePopularity(@Param("coupon_id") Long couponId);
 
-    Optional<CouponLike> findByUserIdAndCouponId(Long userId, Long couponId);
+    Optional<CouponLike> findByUserAndCoupon(User user, Coupon coupon);
 }

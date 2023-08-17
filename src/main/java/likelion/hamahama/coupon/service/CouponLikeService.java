@@ -12,9 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 // 즐겨찾기 및 만족-불만족
 @Service
@@ -28,29 +26,35 @@ public class CouponLikeService {
     // ============ 즐겨찾기 ====================
     @Transactional
     public void createCouponLike(User user, Coupon coupon){
-        CouponLike couponLike = CouponLike.builder()
-                .coupon(coupon)
-                .user(user)
-                .build();
-        couponLikeRepository.save(couponLike);
+        CouponLike createdCouponLike = new CouponLike(user,coupon);
+        couponLikeRepository.save(createdCouponLike);
     }
     @Transactional
     public void deleteCouponLike(User user, Coupon coupon){
         CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user,coupon);
+        couponLike.dislike();
         couponLikeRepository.delete(couponLike);
     }
     // =============후기 작성 시 만족.불만족에 따라서 likeCount 업다운( 인기순 )==================
     @Transactional
     public void satisfied(Long couponId){
-        couponLikeRepository.increaseLikeCount(couponId);
+        couponLikeRepository.increasePopularity(couponId);
     }
     @Transactional
     public void unsatisfied(Long couponId){
-        couponLikeRepository.decreaseLikeCount(couponId);
+        couponLikeRepository.decreasePopularity(couponId);
     }
 
     //==========마이페이지 즐겨찾기 한 쿠폰 가져오기 ============//
 
+    @Transactional
+    public Page<CouponDetailDto> getLikedCoupon(Long userId, Pageable pageable){
+        User user = userRepository.findById(userId).get();
+        List<CouponLike> couponLikes = couponLikeRepository.findByUser(user);
+        Page<Coupon> coupons = couponRepository.findAllByLikeUsersIn(couponLikes,pageable);
+        Page<CouponDetailDto> couponDto = coupons.map( c -> new CouponDetailDto(c));
+        return couponDto;
+    }
 //    @Transactional
 //    public Page<CouponDetailDto> getLikedCoupon(Long userId, Pageable pageable){
 //        User user = userRepository.findById(userId).get();
@@ -60,16 +64,16 @@ public class CouponLikeService {
 //        return couponDto;
 //    }
 
-    @Transactional
-    public List<Coupon> getLikedCoupon(Long userId){
-        List<Coupon> coupons = new ArrayList<>();
-        User user = userRepository.findById(userId).get();
-        List<Long> userIdList = couponLikeRepository.findByUserId(user.getId());
-        userIdList.forEach(couponId-> {
-            Optional<Coupon> coupon = couponRepository.findById(couponId);
-            coupons.add(coupon.get());
-        });
-
-        return coupons;
-    }
+//    @Transactional
+//    public List<Coupon> getLikedCoupon(Long userId){
+//        List<Coupon> coupons = new ArrayList<>();
+//        User user = userRepository.findById(userId).get();
+//        List<Long> userIdList = couponLikeRepository.findByUserId(user.getId());
+//        userIdList.forEach(couponId-> {
+//            Optional<Coupon> coupon = couponRepository.findById(couponId);
+//            coupons.add(coupon.get());
+//        });
+//
+//        return coupons;
+//    }
 }

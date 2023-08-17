@@ -23,7 +23,6 @@ public class SignResponse {
     //private List<String> role;
     private String accessToken;
     private String refreshToken;
-    private Boolean fcmStatus;
 
     public SignResponse(User user){
         this.id = user.getId();

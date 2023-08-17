@@ -2,6 +2,7 @@ package likelion.hamahama.user.entity;
 
 
 import likelion.hamahama.brand.entity.BrandLike;
+import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.CouponLike;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
@@ -12,7 +13,6 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Data
 @DynamicUpdate
@@ -42,12 +42,8 @@ public class User extends BaseTimeEntity {
     @Column(name="fcm_token")
     private String fcmToken;
 
-    @Column(name="fcm_status")
-    private Boolean fcmStatus;
-
-//    @Builder.Default
-//    @Convert(converter = StringListConverter.class)
-//    private List<String> favoriteBrands = new ArrayList<>();
+    @Convert(converter = StringListConverter.class)
+    private List<String> favoriteBrands = new ArrayList<>();
 
 
 //    //@ElementCollection(fetch = FetchType.LAZY)
@@ -57,24 +53,31 @@ public class User extends BaseTimeEntity {
     private Role role;
 
 
-//    @OneToMany(
-//            mappedBy ="user",
-//            fetch = FetchType.EAGER,
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
-//    @Builder.Default
-////    @Fetch(FetchMode.SUBSELECT)
-////    @BatchSize(size = 10)
-//    private List<CouponLike> likeCoupons = new ArrayList<>();
+    @OneToMany(
+            mappedBy ="user",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 10)
+    private List<CouponLike> likeCoupons = new ArrayList<>();
 
-/**추가 */
-//    @OneToMany(
-//            mappedBy ="user",
-//            fetch =  FetchType.LAZY,
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true
-//    )
-//    @Builder.Default
-//    private List<BrandLike> likeBrand = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy ="user",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<BrandLike> likeBrand = new ArrayList<>();
+
+    /**추가 */
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Coupon> coupons = new ArrayList<>();
 }

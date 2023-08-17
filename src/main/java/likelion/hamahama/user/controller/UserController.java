@@ -1,18 +1,18 @@
 package likelion.hamahama.user.controller;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
 import likelion.hamahama.user.config.auth.JwtProvider;
-import likelion.hamahama.user.dto.FcmRequest;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.dto.SignRequest;
 import likelion.hamahama.user.dto.SignResponse;
 import likelion.hamahama.user.repository.UserRepository;
-import likelion.hamahama.user.service.*;
+import likelion.hamahama.user.service.KakaoLoginService;
 
+import likelion.hamahama.user.service.LoginService;
+import likelion.hamahama.user.service.RegisterMail;
+import likelion.hamahama.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -21,20 +21,31 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
-    private final JwtProvider jwtProvider;
-    private final LoginService loginService;
-    private final UserService userService;
-    private final KakaoLoginService kakaoLoginService;
-    private final RegisterMail registerMail;
-    private final UserRepository userRepository;
+
+    @Autowired
+    private JwtProvider jwtProvider;
+
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private KakaoLoginService kakaoLoginService;
+
+    @Autowired
+    private RegisterMail registerMail;
+
+    @Autowired
+    private UserRepository userRepository;
+
     private final HttpSession httpSession;
-    private final FCMService fcmService;
 
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam(value="code")String code, HttpServletResponse response) throws Exception {
@@ -68,27 +79,6 @@ public class UserController {
         return new ResponseEntity<>(new_accessToken, HttpStatus.OK);
     }
 
-    //사용자 기기에 대한 access token을 회원 db에 저장
-    @PostMapping("user/saveFcmToken")
-    public void getFcmToken(@RequestBody SignRequest request){
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
-
-        if(user.isPresent()){
-            user.get().setFcmToken(request.getFcmToken());
-            user.get().setFcmStatus(request.getFcmStatus());
-            userRepository.save(user.get());
-        }
-    }
-
-    @PostMapping("user/send")
-    public void test(@RequestBody FcmRequest request) throws IOException, FirebaseMessagingException {
-        fcmService.sendMessageTo(request.getTopic(), request.getTitle(), request.getBody());
-    }
-
-//    @GetMapping("user/test")
-//    public void test() throws FirebaseMessagingException {
-//        fcmService.topicCreate();
-//    }
 
 
 

@@ -81,7 +81,6 @@ public class LoginService {
                     .role(user.getRole())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
-                    .fcmStatus(user.getFcmStatus())
                     .build();
 
         } else {

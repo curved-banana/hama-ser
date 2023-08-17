@@ -1,5 +1,6 @@
 package likelion.hamahama.user.controller;
 
+
 import likelion.hamahama.brand.dto.BrandDto;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.brand.entity.BrandLike;
@@ -10,8 +11,8 @@ import likelion.hamahama.comment.dto.CommentDto;
 import likelion.hamahama.comment.entity.Comment;
 import likelion.hamahama.comment.repository.CommentRepository;
 import likelion.hamahama.comment.service.CommentService;
-import likelion.hamahama.common.CreateResponseMessage;
 import likelion.hamahama.coupon.dto.CouponDetailDto;
+import likelion.hamahama.common.CreateResponseMessage;
 import likelion.hamahama.coupon.dto.CouponDto;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.service.CouponLikeService;
@@ -39,46 +40,34 @@ public class MyPageController {
     private final UserService userService;
     private final CouponLikeService couponLikeService;
     private final BrandService brandService;
-    private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
     private final CommentService commentService;
     private final CouponService couponService;
-    private final BrandLikeRepsitory brandLikeRepsitory;
-    private final BrandRepository brandRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+
+    // 사용한 쿠폰
 
 
     // 즐겨찾기한 쿠폰
-//    @GetMapping("/mypage/likeCoupon")
-//    public Page<CouponDetailDto> getMyLikedCoupons(User user, Pageable pageable){
-//       String email = user.getEmail();
-//       Long user_id = userService.findUserOne(email).getId();
-//
-//       Page<CouponDetailDto> likedCoupons = couponLikeService.getLikedCoupon(user_id,pageable);
-//       return likedCoupons;
-//
-//    }
-//
-//    // 즐겨찾기한 브랜드들
-//    @GetMapping("/mypage/likeBrand")
-//    public Page<BrandDto> getMyLikedBrands(User user, Pageable pageable){
-//        String email = user.getEmail();
-//        Long user_id = userService.findUserOne(email).getId();
-//
-//        Page<BrandDto> likedBrands = brandService.getLikedBrand(user_id, pageable);
-//
-//        return likedBrands;
-//    }
-    // ============== 브랜드 즐겨찾기 (마이페이지) ================
-    @GetMapping("/mypage/{email}/{brandId}/edit")
-    public CreateResponseMessage likeBrand(@PathVariable("email") String email, @PathVariable("brandId") String brandId){
-        Long brand_id = Long.valueOf(brandId);
-        Optional<Brand> brand = brandRepository.findById(brand_id);
-        Optional<User> user = userRepository.findByEmail(email);
-        BrandLike brandLike = brandLikeRepsitory.findOneByUserAndBrand(user.get(), brand.get());
-        if(brandLike == null ){
-            brandService.createBrandFavorite(user.get(), brand.get());
-        }else brandService.deleteBrandFavorite(user.get(), brand.get());
-        return new CreateResponseMessage((long) 200, "좋아요 성공");
+    @GetMapping("/mypage/likeCoupon")
+    public Page<CouponDetailDto> getMyLikedCoupons(User user, Pageable pageable){
+       String email = user.getEmail();
+       Long user_id = userService.findUserOne(email).getId();
+
+       Page<CouponDetailDto> likedCoupons = couponLikeService.getLikedCoupon(user_id,pageable);
+       return likedCoupons;
+
+    }
+
+    // 즐겨찾기한 브랜드들 
+    @GetMapping("/mypage/likeBrand")
+    public Page<BrandDto> getMyLikedBrands(User user, Pageable pageable){
+        String email = user.getEmail();
+        Long user_id = userService.findUserOne(email).getId();
+
+        Page<BrandDto> likedBrands = brandService.getLikedBrand(user_id, pageable);
+
+        return likedBrands;
     }
 
     // 내가 작성한 댓글 불러오기
@@ -90,16 +79,16 @@ public class MyPageController {
 
     // 내가 등록한 쿠폰 불러오기
     @GetMapping("/mypage/createCoupon")
-    public ResponseEntity<List<CouponDetailDto>> getMyCoupons(@RequestParam Long userId){
+    public ResponseEntity<List<Coupon>> getMyCoupons(@RequestParam String email){
         return new ResponseEntity<>(
-                couponService.getMyCoupon(userId), HttpStatus.OK);
+                couponService.getMyCoupon(email), HttpStatus.OK);
     }
 
     //사용한 쿠폰들
     @GetMapping("/mypage/{email}/usedCoupons")
     public List<CommentDto> getUsedCoupons(@PathVariable String email){
         Optional<User> user = userRepository.findByEmail(email);
-        Optional<List<Comment>> commentEntity = commentRepository.findByUserId(user.get().getId());
+        Optional<List<Comment>> commentEntity = commentRepository.findByUser(user.get());
 
         List<CommentDto> responseCoupons = new ArrayList<>();
         commentEntity.get().forEach(comment -> {
