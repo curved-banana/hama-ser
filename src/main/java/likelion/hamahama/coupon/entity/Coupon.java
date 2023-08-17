@@ -4,10 +4,7 @@ import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.coupon.entity.enums.Category;
 import likelion.hamahama.user.entity.BaseTimeEntity;
 import likelion.hamahama.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,8 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @Table(name="coupon_table")
@@ -52,12 +50,10 @@ public class Coupon extends BaseTimeEntity {
 
     //== 쿠폰 유효기간 ==
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private String startDate;
 
     @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    private String endDate;
 
 //    @OneToMany(
 //            mappedBy = "coupon",
@@ -66,17 +62,17 @@ public class Coupon extends BaseTimeEntity {
 //    )
 //    private List<CouponLike> likeUsers = new ArrayList<>();
 
-    @Column(name="likeCount")
+    @Column(name="popularity")
     @ColumnDefault("0")
-    private int likeCount;
+    private int popularity;
 
     /**추가 */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="user_id", referencedColumnName = "user_id")
     private User user;
 
     // 일반적으로 사용
-    public Coupon(String couponName, Category category, String couponCode, String couponUrl, LocalDate startDate, LocalDate endDate, String description, int likeCount) {
+    public Coupon(String couponName, Category category, String couponCode, String couponUrl, String startDate, String endDate, String description, int popularity) {
         this.couponName = couponName;
         this.category = category;
         this.couponCode = couponCode;
@@ -84,6 +80,6 @@ public class Coupon extends BaseTimeEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
-        this.likeCount = likeCount;
+        this.popularity = popularity;
     }
 }

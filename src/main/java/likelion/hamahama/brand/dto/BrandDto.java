@@ -9,21 +9,20 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class BrandDto {
-    private long brandId;
+    private Long brandId;
     private Category category;
     private String brandName;
     private String brandImgUrl;
-    private boolean favoirteStatus;
+    private String brandEnglishName;
 
-    public BrandDto(Category category, String brandName, String brandImgUrl, boolean favoirteStatus) {
-        this.category = category;
-        this.brandName = brandName;
-        this.brandImgUrl = brandImgUrl;
-        this.favoirteStatus = favoirteStatus;
-    }
+//    public BrandDto(Category category, String brandName, String brandImgUrl) {
+//        this.category = category;
+//        this.brandName = brandName;
+//        this.brandImgUrl = brandImgUrl;
+//    }
 
 
     public BrandDto(Brand brand){
@@ -31,11 +30,12 @@ public class BrandDto {
         this.category = brand.getCategory();
         this.brandName = brand.getBrandName();
         this.brandImgUrl = brand.getBrandImgUrl();
+        this.brandEnglishName = brand.getBrandEnglishName();
     }
-    public BrandDto(String brandName, String brandImgUrl) {
-        this.brandName = brandName;
-        this.brandImgUrl = brandImgUrl;
-    }
+//    public BrandDto(String brandName, String brandImgUrl) {
+//        this.brandName = brandName;
+//        this.brandImgUrl = brandImgUrl;
+//    }
 
 
 }

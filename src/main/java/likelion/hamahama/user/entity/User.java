@@ -45,6 +45,9 @@ public class User extends BaseTimeEntity {
     @Column(name="fcm_status")
     private Boolean fcmStatus;
 
+    @Column(name="login_keep")
+    private Boolean loginKeep;
+
 //    @Builder.Default
 //    @Convert(converter = StringListConverter.class)
 //    private List<String> favoriteBrands = new ArrayList<>();

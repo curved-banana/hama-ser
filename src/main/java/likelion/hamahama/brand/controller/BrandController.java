@@ -34,7 +34,7 @@ public class BrandController {
     @Autowired
     private final  BrandLikeRepsitory brandLikeRepsitory;
 
-    // 모든 브랜드 조회
+    // 모든 브랜드 조회 (사용 x)
     @GetMapping("/brandList")
     public ResponseEntity<List<Brand>> findAll() {
         return new ResponseEntity<>(brandRepository.findAll(), HttpStatus.OK);
@@ -48,7 +48,7 @@ public class BrandController {
 //        return theBrandDTO;
 //    }
 
-    //단일 브랜드 조회
+    //단일 브랜드 조회 (사용 x -> 쿠폰등록 페이지에서 브랜드명 찾을때 쿠폰 키워드 검색으로 대체)
     @GetMapping("/{brandId}")
     public BrandDto getBrand(@PathVariable Long brandId){
         BrandDto theBrandDTO = new BrandDto(brandService.findBrandById(brandId).get());
@@ -67,14 +67,14 @@ public class BrandController {
     }
 
     // ============= 브랜드 검색 시 브랜드 출력 ==============
-    @GetMapping("/search/brand")
+    @GetMapping("/search")
     public List<Brand> findBrandByKeyword(@RequestParam String keyword){
         List<Brand> brandlist = brandService.findByKeyword(keyword);
         return brandlist;
     }
 
 
-    // 브랜드 삭제
+    // 브랜드 삭제 (사용 x)
     @DeleteMapping("/brands/{brandId}")
     public String deleteBrand(@PathVariable Long brandId){
         Optional<Brand> tempBrand = brandService.findBrandById(brandId);

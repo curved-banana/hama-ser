@@ -4,10 +4,13 @@ package likelion.hamahama.comment.service;
 import likelion.hamahama.comment.dto.CommentRequestDto;
 import likelion.hamahama.comment.dto.CommentDto;
 import likelion.hamahama.comment.entity.Comment;
+import likelion.hamahama.comment.entity.Evaluation;
+import likelion.hamahama.comment.repository.EvaluationRepository;
 import likelion.hamahama.coupon.entity.Coupon;
 import likelion.hamahama.coupon.entity.CouponLike;
 import likelion.hamahama.coupon.repository.CouponLikeRepository;
 import likelion.hamahama.coupon.repository.CouponRepository;
+import likelion.hamahama.coupon.service.CouponLikeService;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.comment.repository.CommentRepository;
 import likelion.hamahama.user.repository.UserRepository;
@@ -40,26 +43,44 @@ public class CommentService {
     @Autowired
     private CouponLikeRepository couponLikeRepository;
 
+    @Autowired
+    private EvaluationRepository evaluationRepository;
+
+    @Autowired
+    private CouponLikeService couponLikeService;
+
     public void saveComment(CommentDto request){
 
         Optional<User> user = userRepository.findByEmail(request.getUserEmail());
 
         Optional<Coupon> coupon = couponRepository.findById(request.getCouponId());
 
-        Optional<CouponLike> couponLikeEntity = couponLikeRepository.findByUserIdAndCouponId(user.get().getId(), coupon.get().getId());
+        //Optional<CouponLike> couponLikeEntity = couponLikeRepository.findByUserAndCoupon(user.get(), coupon.get());
 
         Comment new_comment = Comment
                 .builder()
+                .comment(request.getComment())
                 .user(user.get())
                 .coupon(coupon.get())
                 .build();
 
         commentRepository.save(new_comment);
 
-        couponLikeEntity.get().setSatisfied(request.isSatisfied());
-        couponLikeEntity.get().setUnsatisfied(request.isUnsatisfied());
+        Evaluation evaluation = Evaluation.builder()
+                .coupon(coupon.get())
+                .user(user.get())
+                .satisfied(request.getSatisfied())
+                .unsatisfied(request.getUnsatisfied())
+                .build();
 
-        couponLikeRepository.save(couponLikeEntity.get());
+        evaluationRepository.save(evaluation);
+
+        if(request.getSatisfied()){
+            couponLikeService.satisfied(request.getCouponId());
+        }
+        if(request.getUnsatisfied()){
+            couponLikeService.unsatisfied(request.getCouponId());
+        }
     }
 
     //유저가 작성한 쿠폰의 댓글 조회
@@ -187,7 +208,7 @@ public class CommentService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        Coupon coupon = couponRepository.findByCouponNameContaining(couponName);
+        Coupon coupon = couponRepository.findByCouponName(couponName);
 
         Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.getId());
 
@@ -203,7 +224,7 @@ public class CommentService {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        Coupon coupon = couponRepository.findByCouponNameContaining(couponName);
+        Coupon coupon = couponRepository.findByCouponName(couponName);
 
         Optional<Comment> commentEntity = commentRepository.findByUserIdAndCouponId(user.get().getId(), coupon.getId());
 

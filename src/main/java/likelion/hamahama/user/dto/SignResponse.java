@@ -24,6 +24,9 @@ public class SignResponse {
     private String accessToken;
     private String refreshToken;
     private Boolean fcmStatus;
+    private Boolean status;
+    private String code;
+
 
     public SignResponse(User user){
         this.id = user.getId();

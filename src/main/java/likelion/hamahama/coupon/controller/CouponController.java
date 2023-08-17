@@ -46,56 +46,46 @@ public class CouponController {
 //        return couponService.findAll_coupon_category(category);
 //    }
 
-    // 쿠폰 ID 기반으로 단일 쿠폰 조회 = 쿠폰 상세 페이지
+    // 쿠폰 ID 기반으로 단일 쿠폰 조회 = 쿠폰 상세 페이지 (성공)
     @GetMapping("/coupon/{couponId}")
-    public Optional<Coupon> findCouponByName(@PathVariable String couponId) {
-        Long requestCouponId = Long.valueOf(couponId);
+    public CouponDetailDto findCouponByName(@PathVariable Long couponId) {
 
-        return couponService.findCouponById(requestCouponId);
+        return couponService.findCouponById(couponId);
     }
 
-    @GetMapping("/coupons")
-    public List<Coupon> findAll(){
-        return couponRepository.findAll();
-    }
-    //================================
-
-    // 쿠폰 등록
+    // 쿠폰 등록 (성공)
     @PostMapping("/coupon/create")
-    public void addCoupon(@RequestBody CouponDto theCoupon) {
-        theCoupon.setCouponId(0);
+    public void addCoupon(@RequestBody CouponDetailDto theCoupon) {
         couponService.saveCoupon(theCoupon);
     }
 
-    // 쿠폰 수정
+    // 쿠폰 수정 (성공)
     @PutMapping("/coupon/{couponId}/update")
-    public void updateCoupon(@PathVariable String couponId, @RequestBody CouponDto theCouponDTO) {
-        Long coupon_id = Long.valueOf(couponId);
-        couponService.updateCoupon(theCouponDTO, coupon_id);
+    public void updateCoupon(@PathVariable Long couponId, @RequestBody CouponDetailDto theCouponDTO) {
+
+        couponService.updateCoupon(theCouponDTO, couponId);
 
     }
 
     // 쿠폰 삭제
-    @GetMapping("/coupon/{couponId}/delete")
-    public String deleteCoupon(@PathVariable String couponId){
-        Long coupon_id = Long.valueOf(couponId);
+//    @GetMapping("/coupon/{couponId}/delete")
+//    public String deleteCoupon(@PathVariable Long couponId){
+//
+//        Optional<Coupon> tempCoupon = couponService.findCouponById(couponId);
+//
+//
+//        if (tempCoupon == null) {
+//            throw new RuntimeException("쿠폰이 발견 되지 않았습니다 - " + couponId);
+//        }
+//        couponService.deleteById(couponId);
+//
+//        return "쿠폰이 삭제 되었습니다 - " + couponId;
+//    }
 
-        Optional<Coupon> tempCoupon = couponService.findCouponById(coupon_id);
-
-
-        if (tempCoupon == null) {
-            throw new RuntimeException("쿠폰이 발견 되지 않았습니다 - " + couponId);
-        }
-        couponService.deleteById(coupon_id);
-
-        return "쿠폰이 삭제 되었습니다 - " + couponId;
-    }
-
-    //========= 쿠폰 즐겨찾기(이미 즐겨찾기 달려있다면 즐겨찾기 취소)=============
+    //========= 쿠폰 즐겨찾기(이미 즐겨찾기 달려있다면 즐겨찾기 취소)============= (성공)
     @PostMapping("/coupon/{email}/{couponId}/like")
-    public CreateResponseMessage likeCoupon(@PathVariable("email") String email, @PathVariable("couponId") String couponId) {
-        Long coupon_id = Long.valueOf(couponId);
-        Optional<Coupon> coupon = couponRepository.findById(coupon_id);
+    public CreateResponseMessage likeCoupon(@PathVariable("email") String email, @PathVariable("couponId") Long couponId) {
+        Optional<Coupon> coupon = couponRepository.findById(couponId);
         Optional<User> user = userRepository.findByEmail(email);
         //User user = userService.findUser(email);
         CouponLike couponLike = couponLikeRepository.findOneByUserAndCoupon(user.get(), coupon.get());
@@ -105,32 +95,30 @@ public class CouponController {
         return new CreateResponseMessage((long) 200, "좋아요 성공");
     }
 
-    // ========= 브랜드에 해당되는 쿠폰 리스트 ====================
+    // ========= 브랜드에 해당되는 쿠폰 리스트 ==================== 성공
     @GetMapping("/coupon/{brandId}/list")
-    public Page<CouponDetailDto> couponByBrand(@PathVariable("brandId") Long brandId, Pageable pageable) {
-        return couponService.findCouponByBrand(brandId, pageable);
+    public List<CouponDto> couponByBrand(@PathVariable("brandId") Long brandId) {
+        return couponService.findCouponByBrand(brandId);
     }
 
 
-    // =============== 키워드 검색하여 쿠폰 이름 해당할 시 list 출력 [검색 화면 생각 ] =================
-    @GetMapping("/coupon/search/list")
-    public Page<Coupon> couponList(Pageable pageable, String searchKeyword) {
-        return searchKeyword == null ? couponService.couponList(pageable) :
-                couponService.couponSearchList(searchKeyword, pageable);
-    }
+    // =============== 키워드 검색하여 쿠폰 이름 해당할 시 list 출력 [검색 화면 생각 ] ================= 사용x
+//    @GetMapping("/coupon/search/list")
+//    public Page<Coupon> couponList(Pageable pageable, String searchKeyword) {
+//        return searchKeyword == null ? couponService.couponList(pageable) :
+//                couponService.couponSearchList(searchKeyword, pageable);
+//    }
 
     // 메인 페이지에서 보이는 쿠폰들 orderby = 최신순(createdDate), 인기순(likeCount)
     @GetMapping("/coupon/main")
-    public Page<CouponDetailDto> couponListBy(@RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria,
-                                              Pageable pageable) {
-        return couponService.couponListBy(pageable, orderCriteria);
+    public List<CouponDto> couponListBy(@RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria) {
+        return couponService.couponListBy(orderCriteria);
     }
     // 키워드 검색으로 쿠폰 값 출력 - 한 쿠폰에 대한 댓글 목록들은 commentController에
-    @GetMapping("/coupon/keyword/")
-    public ResponseEntity<Page<Coupon>> getCouponsByKeyword(
-            @RequestParam String keyword,
-            @PageableDefault(size = 10) Pageable pageable) {
-        Page<Coupon> coupons = couponService.couponSearchList(keyword, pageable);
+    @GetMapping("/coupon")
+    public ResponseEntity<List<Coupon>> getCouponsByKeyword(
+            @RequestParam String keyword) {
+        List<Coupon> coupons = couponService.couponSearchList(keyword);
         return ResponseEntity.ok(coupons);
     }
 

@@ -17,7 +17,7 @@ public class CommentDto {
     private String couponName;
     private String brandName;
     private String comment;
-    private boolean satisfied;
-    private boolean unsatisfied;
+    private Boolean satisfied;
+    private Boolean unsatisfied;
 
 }

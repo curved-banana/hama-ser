@@ -119,16 +119,22 @@ public class BrandService {
 //        return brandDto;
 //    }
 
-    @Transactional
-    public List<Brand> getLikedBrand(Long userId){
-        List<Brand> brands = new ArrayList<>();
-        User user = userRepository.findById(userId).get();
-        List<Long> userIdList = brandLikeRepsitory.findByUserId(user.getId());
-        userIdList.forEach(brandId-> {
-            Optional<Brand> brand = brandRepository.findById(brandId);
-            brands.add(brand.get());
-        });
-
-        return brands;
+    // ================ 마이페이지에서 브랜드 즐겨찾기 불러오기
+    public List<BrandDto> getLikedBrand(String email){
+        User user = userRepository.findByEmail(email).get();
+        List<BrandLike> brandLikes = brandLikeRepsitory.findByUser(user);
+        List<Brand> favoriteBrands = new ArrayList<>();
+        for (BrandLike brandLike : brandLikes) {
+            favoriteBrands.add(brandLike.getBrand());
+        }
+        List<BrandDto> brandDtoList = new ArrayList<>();
+        for (Brand brand : favoriteBrands) {
+            BrandDto brandDto = new BrandDto();
+            brandDto.setBrandName(brand.getBrandName());
+            brandDto.setBrandImgUrl(brand.getBrandImgUrl());
+            brandDto.setBrandId(brand.getId());
+            brandDtoList.add(brandDto);
+        }
+        return brandDtoList;
     }
 }

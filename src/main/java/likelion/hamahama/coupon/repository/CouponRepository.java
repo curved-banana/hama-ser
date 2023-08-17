@@ -17,24 +17,25 @@ import java.util.Optional;
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     //===== 쿠폰이 속한 카테고리로 쿠폰 찾는 메서드
-    Page<Coupon> findByCategory(Category category, Pageable pageable);
+    //Page<Coupon> findByCategory(Category category, Pageable pageable);
 
     /** 추가 브랜드 쿠폰 찾는 메서드 */
-    Page<Coupon> findByBrand(Brand brand, Pageable pageable);
-    Page<Coupon> findAllByBrand(long brandId, Pageable pageable);
+//    Page<Coupon> findByBrand(Brand brand, Pageable pageable);
+//    Page<Coupon> findAllByBrand(long brandId, Pageable pageable);
 
     List<Coupon> findAllByUser(Long userId);
 
 
     // ========= 쿠폰 이름에 포함된 키워드 찾는 메서드
-    Page<Coupon> findByCouponNameContaining(String searchKeyword, Pageable pageable);
-    Coupon findByCouponNameContaining(String couponName);
+    List<Coupon> findByCouponNameContaining(String searchKeyword);
+    Coupon findByCouponName(String couponName);
 
+    //List<Coupon> findAllByLikeUsersIn(List<CouponLike> couponLike);
 
     // === 쿠폰 정렬 (인기순/최신순) 일단 만들어두는 중
-    Page<Coupon> findById(Long couponId, Pageable pageable);
-    Page<Coupon> findAll(Pageable pageable);
-    Page<Coupon> findByLikeCount(Integer likeCount, Pageable pageable);
+//    Page<Coupon> findById(Long couponId, Pageable pageable);
+//    Page<Coupon> findAll(Pageable pageable);
+//    Page<Coupon> findByLikeCount(Integer likeCount, Pageable pageable);
 
     // 추가=
     //Page<Coupon> findAllByLikeUsersIn(List<CouponLike> couponLike, Pageable pageable);
@@ -51,6 +52,8 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     //boolean existsById(Long couponId);
     boolean existsById(Long couponId);
+
+    List<Coupon> findByBrandId(Long brand);
 
 
     Coupon findByCouponNameAndBrand_brandName(String couponName, String brandName);

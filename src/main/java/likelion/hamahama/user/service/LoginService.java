@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,16 +74,27 @@ public class LoginService {
 
             refreshTokenRepository.save(refreshEntity);
 
+            if(request.getLoginKeep()){
+                return SignResponse.builder()
+                        .id(user.getId())
+                        .nickname(user.getNickname())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .fcmStatus(user.getFcmStatus())
+                        .build();
+            }else{
+                return SignResponse.builder()
+                        .id(user.getId())
+                        .nickname(user.getNickname())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .accessToken(accessToken)
+                        .fcmStatus(user.getFcmStatus())
+                        .build();
+            }
 
-            return SignResponse.builder()
-                    .id(user.getId())
-                    .nickname(user.getNickname())
-                    .email(user.getEmail())
-                    .role(user.getRole())
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .fcmStatus(user.getFcmStatus())
-                    .build();
 
         } else {
             throw new UsernameNotFoundException("invalid user request!");
@@ -111,23 +123,26 @@ public class LoginService {
         return true;
     }
 
-    public String reissueAccessToken(String bearerToken) {
+    public String reissueAccessToken(HttpServletRequest request) {
 
-
-        String refreshToken = jwtProvider.resolveToken(bearerToken);
+        System.out.println(request);
+        String refreshToken = jwtProvider.resolveRefreshToken(request);
         if (!StringUtils.hasText(refreshToken)) {
             throw null;
         }
 
         Claims claims = jwtProvider.parseClaimsFromRefreshToken(refreshToken);
+        System.out.println(claims);
         if (claims == null) {
             throw new NullPointerException("claims가 존재하지 않습니다");
         }
 
         User user = userRepository.findByEmail(claims.getSubject()).orElseThrow(() ->
                 new UsernameNotFoundException("해당 이메일을 가진 유저가 존재하지 않습니다."));
-
+        System.out.println(user);
         String new_accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+        System.out.println(new_accessToken);
+
 
         return new_accessToken;
     }

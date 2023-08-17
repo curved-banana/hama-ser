@@ -16,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -36,6 +37,7 @@ public class UserController {
     private final HttpSession httpSession;
     private final FCMService fcmService;
 
+    //카카오 로그인
     @GetMapping("/login/oauth2/code/kakao")
     public RedirectView kakaoCallback(@RequestParam(value="code")String code, HttpServletResponse response) throws Exception {
 
@@ -51,24 +53,28 @@ public class UserController {
         //return new ResponseEntity<>(kakaoLoginService.createKakaoUser(tokenDTO.getAccessToken(), tokenDTO.getRefreshToken()), HttpStatus.OK)
         return redirectView;
     }
+
+    //회원가입 (성공)
     @PostMapping("/register")
     public ResponseEntity<Boolean> signup(@RequestBody SignRequest signRequest) throws Exception {
         return new ResponseEntity<>(loginService.register(signRequest), HttpStatus.OK);
     }
 
+    //로그인 (성공)
     @PostMapping("/login")
     public ResponseEntity<SignResponse> signin(@RequestBody SignRequest request, HttpServletResponse response) throws Exception {
-        System.out.println(response);
+
         return new ResponseEntity<>(loginService.login(request, response), HttpStatus.OK);
     }
 
-    @PostMapping("/reissue")
-    public ResponseEntity<String> reissueAccessToken(@RequestHeader("refresh-token") String bearerToken){
-        String new_accessToken = loginService.reissueAccessToken(bearerToken);
+    //access token 재발급 (성공)
+    @PostMapping("user/reissue")
+    public ResponseEntity<String> reissueAccessToken(HttpServletRequest request){
+        String new_accessToken = loginService.reissueAccessToken(request);
         return new ResponseEntity<>(new_accessToken, HttpStatus.OK);
     }
 
-    //사용자 기기에 대한 access token을 회원 db에 저장
+    //사용자 기기에 대한 fcm access token을 회원 db에 저장 (성공)
     @PostMapping("user/saveFcmToken")
     public void getFcmToken(@RequestBody SignRequest request){
         Optional<User> user = userRepository.findByEmail(request.getEmail());
@@ -80,33 +86,46 @@ public class UserController {
         }
     }
 
+    //fcm 메시지 보내기 (프론트한테 설명해주기)
     @PostMapping("user/send")
     public void test(@RequestBody FcmRequest request) throws IOException, FirebaseMessagingException {
         fcmService.sendMessageTo(request.getTopic(), request.getTitle(), request.getBody());
     }
 
-//    @GetMapping("user/test")
-//    public void test() throws FirebaseMessagingException {
-//        fcmService.topicCreate();
-//    }
 
 
-
-    //회원가입 시 이메일 인증코드 받기
+    //회원가입 시 이메일 인증코드 받기 (성공)
     @PostMapping("user/register/mailConfirm")
-    public @ResponseBody String mailConfirm(@RequestBody SignRequest request) throws Exception{
+    public ResponseEntity<SignResponse> mailConfirm(@RequestBody SignRequest request) throws Exception{
 
-        String code = registerMail.sendReceiveCodeMessage(request.getEmail());
-        System.out.println("인증코드 : " + code);
-
-        return code;
+        if(userRepository.existsByNickname(request.getNickname())){
+            return new ResponseEntity<>(SignResponse.builder().status(false).build(), HttpStatus.OK);
+        }else {
+            String code = registerMail.sendReceiveCodeMessage(request.getEmail());
+            return new ResponseEntity<>(SignResponse.builder().status(true).code(code).build(), HttpStatus.OK);
+        }
     }
 
-    //이메일로 비밀번호 변경 url 받기
+    //이메일로 비밀번호 변경 url 받기 (성공)
     @PostMapping("/user/resetPassword")
-    public void resetPassword(@RequestBody SignRequest request) throws Exception{
-        registerMail.sendPasswordResetUrl(request.getEmail());
+    public ResponseEntity<SignResponse> resetPassword(@RequestBody SignRequest request) throws Exception{
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if(user.isPresent()){
+            registerMail.sendPasswordResetUrl(request.getEmail());
+            return new ResponseEntity<>(SignResponse.builder().status(true).build(), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(SignResponse.builder().status(false).build(), HttpStatus.OK);
+        }
+    }
 
+    // 닉네임 중복 확인
+    @GetMapping("/user/register/{nickname}")
+    public ResponseEntity<SignResponse> checkNickname(@PathVariable String nickname){
+        if(userRepository.existsByNickname(nickname)){
+            return new ResponseEntity<>(SignResponse.builder().status(false).build(), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(SignResponse.builder().status(true).build(), HttpStatus.OK);
+        }
     }
 
     //전체 회원 조회

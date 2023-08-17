@@ -1,5 +1,6 @@
 package likelion.hamahama.coupon.service;
 import likelion.hamahama.coupon.dto.CouponDetailDto;
+import likelion.hamahama.coupon.dto.CouponDto;
 import likelion.hamahama.coupon.entity.CouponLike;
 import likelion.hamahama.coupon.repository.CouponRepository;
 import likelion.hamahama.user.entity.User;
@@ -42,11 +43,11 @@ public class CouponLikeService {
     // =============후기 작성 시 만족.불만족에 따라서 likeCount 업다운( 인기순 )==================
     @Transactional
     public void satisfied(Long couponId){
-        couponLikeRepository.increaseLikeCount(couponId);
+        couponLikeRepository.increasePopularity(couponId);
     }
     @Transactional
     public void unsatisfied(Long couponId){
-        couponLikeRepository.decreaseLikeCount(couponId);
+        couponLikeRepository.decreasePopularity(couponId);
     }
 
     //==========마이페이지 즐겨찾기 한 쿠폰 가져오기 ============//
@@ -61,15 +62,22 @@ public class CouponLikeService {
 //    }
 
     @Transactional
-    public List<Coupon> getLikedCoupon(Long userId){
-        List<Coupon> coupons = new ArrayList<>();
-        User user = userRepository.findById(userId).get();
-        List<Long> userIdList = couponLikeRepository.findByUserId(user.getId());
-        userIdList.forEach(couponId-> {
-            Optional<Coupon> coupon = couponRepository.findById(couponId);
-            coupons.add(coupon.get());
-        });
-
-        return coupons;
+    public List<CouponDto> getLikedCoupon(String email){
+        User user = userRepository.findByEmail(email).get();
+        List<CouponLike> couponLikes = couponLikeRepository.findByUser(user);
+        List<Coupon> favoritesCoupons = new ArrayList<>();
+        for(CouponLike couponLike : couponLikes){
+            favoritesCoupons.add(couponLike.getCoupon());
+        }
+        List<CouponDto> couponDtoList = new ArrayList<>();
+        for(Coupon coupon : favoritesCoupons){
+            CouponDto couponDto = new CouponDto();
+            couponDto.setCouponId(coupon.getId());
+            couponDto.setCouponName(coupon.getCouponName());
+            couponDto.setStartDate(coupon.getStartDate());
+            couponDto.setEndDate(coupon.getEndDate());
+            couponDto.setBrandImgUrl(coupon.getBrand().getBrandImgUrl());
+        }
+        return couponDtoList;
     }
 }

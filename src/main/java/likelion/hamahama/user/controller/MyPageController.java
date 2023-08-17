@@ -24,16 +24,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class MyPageController {
     private final UserService userService;
@@ -47,27 +45,23 @@ public class MyPageController {
     private final BrandRepository brandRepository;
 
 
-    // 즐겨찾기한 쿠폰
-//    @GetMapping("/mypage/likeCoupon")
-//    public Page<CouponDetailDto> getMyLikedCoupons(User user, Pageable pageable){
-//       String email = user.getEmail();
-//       Long user_id = userService.findUserOne(email).getId();
-//
-//       Page<CouponDetailDto> likedCoupons = couponLikeService.getLikedCoupon(user_id,pageable);
-//       return likedCoupons;
-//
-//    }
-//
-//    // 즐겨찾기한 브랜드들
-//    @GetMapping("/mypage/likeBrand")
-//    public Page<BrandDto> getMyLikedBrands(User user, Pageable pageable){
-//        String email = user.getEmail();
-//        Long user_id = userService.findUserOne(email).getId();
-//
-//        Page<BrandDto> likedBrands = brandService.getLikedBrand(user_id, pageable);
-//
-//        return likedBrands;
-//    }
+     //즐겨찾기한 쿠폰
+    @GetMapping("/mypage/likeCoupon")
+    public List<CouponDto> getMyLikedCoupons(@RequestParam String email){
+        Optional<User> user = userRepository.findByEmail(email);
+        List<CouponDto> likedCoupons = couponLikeService.getLikedCoupon(email);
+
+        return likedCoupons;
+
+    }
+    /** 즐겨찾기한 브랜드 */
+    @GetMapping("/mypage/likeBrand")
+    public List<BrandDto> getMyLikedBrands(@RequestParam String email){
+        Optional<User> user = userRepository.findByEmail(email);
+        List<BrandDto> likedBrands = brandService.getLikedBrand(email);
+        return likedBrands;
+    }
+
     // ============== 브랜드 즐겨찾기 (마이페이지) ================
     @GetMapping("/mypage/{email}/{brandId}/edit")
     public CreateResponseMessage likeBrand(@PathVariable("email") String email, @PathVariable("brandId") String brandId){
@@ -90,9 +84,9 @@ public class MyPageController {
 
     // 내가 등록한 쿠폰 불러오기
     @GetMapping("/mypage/createCoupon")
-    public ResponseEntity<List<CouponDetailDto>> getMyCoupons(@RequestParam Long userId){
+    public ResponseEntity<List<CouponDetailDto>> getMyCoupons(@RequestParam String email){
         return new ResponseEntity<>(
-                couponService.getMyCoupon(userId), HttpStatus.OK);
+                couponService.getMyCoupon(email), HttpStatus.OK);
     }
 
     //사용한 쿠폰들
