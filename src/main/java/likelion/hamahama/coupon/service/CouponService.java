@@ -181,21 +181,27 @@ public class CouponService {
     private static final int PAGE_COUPON_COUNTING = 6;
     private static final int FIRST_PAGE = 0;
 
-    public List<CouponDto> couponListBy (String orderCriteria){
+    public List<Coupon> couponListBy (String orderCriteria){
         List<Coupon> orderCoupons = couponRepository.findAll(Sort.by(Sort.Direction.DESC, orderCriteria));
 //        pageable = PageRequest.of(FIRST_PAGE, PAGE_COUPON_COUNTING, Sort.by(Sort.Direction.DESC, orderCriteria));
 //        Page<Coupon> couponPage = couponRepository.findAll(pageable);
 
-        List<CouponDto> coupons = new ArrayList<>();
-        orderCoupons.forEach(coupon -> {
-            coupons.add(CouponDto.builder()
-                    .couponId(coupon.getId())
-                    .couponName(coupon.getCouponName())
-                    .startDate(coupon.getStartDate())
-                    .endDate(coupon.getEndDate())
-                    .brandImgUrl(coupon.getBrand().getBrandImgUrl())
-                    .build());
-        });
+        List<Coupon> coupons = new ArrayList<>();
+
+        for(int i=0; i<6; i++){
+            coupons.add(orderCoupons.get(i));
+        }
+
+
+//        orderCoupons.forEach(coupon -> {
+//            coupons.add(CouponDto.builder()
+//                    .couponId(coupon.getId())
+//                    .couponName(coupon.getCouponName())
+//                    .startDate(coupon.getStartDate())
+//                    .endDate(coupon.getEndDate())
+//                    .brandImgUrl(coupon.getBrand().getBrandImgUrl())
+//                    .build());
+//        });
         return coupons;
     }
 

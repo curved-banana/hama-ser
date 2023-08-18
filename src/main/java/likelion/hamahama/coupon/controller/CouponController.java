@@ -113,7 +113,7 @@ public class CouponController {
 
     // 메인 페이지에서 보이는 쿠폰들 orderby = 최신순(createdDate), 인기순(likeCount)
     @GetMapping("/coupon/main")
-    public List<CouponDto> couponListBy(@RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria) {
+    public List<Coupon> couponListBy(@RequestParam(required = false, defaultValue = "id", value = "orderby") String orderCriteria) {
         return couponService.couponListBy(orderCriteria);
     }
     // 키워드 검색으로 쿠폰 값 출력 - 한 쿠폰에 대한 댓글 목록들은 commentController에

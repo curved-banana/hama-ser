@@ -20,6 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
+import static likelion.hamahama.user.entity.Role.ROLE_USER;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -155,14 +157,14 @@ public class KakaoLoginService {
             }else{
                 user = User.builder()
                         .email(email)
-                        .role(Role.ROLE_USER)
+                        .role(ROLE_USER)
                         .provider("kakao")
                         .build();
 
                 userRepository.save(user);
             }
-            String access_token = jwtProvider.createAccessToken(email, Role.ROLE_USER);
-            String refresh_token = jwtProvider.createRefreshToken(email, Role.ROLE_USER);
+            String access_token = jwtProvider.createAccessToken(email, ROLE_USER);
+            String refresh_token = jwtProvider.createRefreshToken(email, ROLE_USER);
 
             jwtProvider.setHeaderAccessToken(response, access_token);
             jwtProvider.setHeaderRefreshToken(response, refresh_token);
