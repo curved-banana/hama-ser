@@ -1,5 +1,6 @@
 package likelion.hamahama.user.dto;
 
+import com.google.firebase.messaging.FcmOptions;
 import com.google.firebase.messaging.Notification;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class FCMMessageDto {
     public static class Message{
         private Notification notification;
         private String topic;
+        private Webpush webpush;
     }
 
     @Builder
@@ -28,6 +30,20 @@ public class FCMMessageDto {
     public static class Notification {
         private String title;
         private String body;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class Webpush{
+        private FcmOptions fcm_options;
+    }
+
+    @Builder
+    @AllArgsConstructor
+    @Getter
+    public static class FcmOptions{
+        private String link;
     }
 
 }

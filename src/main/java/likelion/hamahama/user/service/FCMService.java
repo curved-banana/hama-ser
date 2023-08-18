@@ -54,10 +54,11 @@ public class FCMService {
     }
 
     @Transactional
-    public void sendMessageTo(String topic, String title, String body) throws IOException, FirebaseMessagingException {
+    public void sendMessageTo(String topic, String title, String body, String link) throws IOException, FirebaseMessagingException {
         topicCreate();
 
-        String message = makeMessage(topic, title, body);
+        String message = makeMessage(topic, title, body, link);
+        System.out.println(message);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message,
@@ -76,13 +77,18 @@ public class FCMService {
     }
 
     @Transactional
-    public String makeMessage(String topic, String title, String body) throws JsonProcessingException {
+    public String makeMessage(String topic, String title, String body, String link) throws JsonProcessingException {
         FCMMessageDto fcmMessageDto = FCMMessageDto.builder()
                 .message(FCMMessageDto.Message.builder()
                         .topic(topic)
                         .notification(FCMMessageDto.Notification.builder()
                                 .title(title)
                                 .body(body)
+                                .build())
+                        .webpush(FCMMessageDto.Webpush.builder()
+                                .fcm_options(FCMMessageDto.FcmOptions.builder()
+                                        .link(link)
+                                        .build())
                                 .build())
                         .build())
                 .validate_only(false)

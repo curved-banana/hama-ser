@@ -1,5 +1,6 @@
 package likelion.hamahama.coupon.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import likelion.hamahama.brand.entity.Brand;
 import likelion.hamahama.brand.repository.BrandRepository;
 import likelion.hamahama.comment.entity.Comment;
@@ -15,6 +16,7 @@ import likelion.hamahama.coupon.repository.CouponLikeRepository;
 import likelion.hamahama.coupon.repository.CouponRepository;
 import likelion.hamahama.user.entity.User;
 import likelion.hamahama.user.repository.UserRepository;
+import likelion.hamahama.user.service.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +40,7 @@ public class CouponService {
     private final UserRepository userRepository;
     private final CouponLikeRepository couponLikeRepository;
     private final EvaluationRepository evaluationRepository;
+    private final FCMService fcmService;
     // 브랜드 ID 기반으로 브랜드 찾기(사용x)
 //    public Brand findBrandByName(String theName) {
 //        return brandRepository.findByBrandName(theName);
@@ -89,7 +93,7 @@ public class CouponService {
 
     // DTO를 받아와서 쿠폰 저장
     @Transactional
-    public void saveCoupon(CouponDetailDto couponDetailDto){
+    public void saveCoupon(CouponDetailDto couponDetailDto) throws IOException, FirebaseMessagingException {
         Optional<User> user = userRepository.findByEmail(couponDetailDto.getEmail());
         Brand tempBrand = brandRepository.findByBrandName(couponDetailDto.getBrandName());
 
@@ -107,6 +111,13 @@ public class CouponService {
 
 
         couponRepository.save(coupon);
+
+        String link="http://localhost:8088/api/coupon/" + coupon.getId();
+
+        String korean_topic = couponDetailDto.getBrandName();
+        Brand brand = brandRepository.findByBrandName(korean_topic);
+        fcmService.sendMessageTo(brand.getBrandEnglishName(),
+                "하마하마", korean_topic + " 브랜드에 할인 쿠폰이 추가되었습니다! 아래 링크를 통해 해당 쿠폰을 확인할 수 있습니다!", link);
     }
 
     // DTO를 받아와서 쿠폰 수정

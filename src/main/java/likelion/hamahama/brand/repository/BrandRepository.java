@@ -32,6 +32,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     // 키워드 검색 후 브랜드 출력
     List<Brand> findByBrandNameContaining(String brandName);
 
+
     //Optional<BrandLike> findByUserAndBrand(User user, Brand brand);
 
 

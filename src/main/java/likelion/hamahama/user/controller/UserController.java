@@ -87,10 +87,10 @@ public class UserController {
     }
 
     //fcm 메시지 보내기 (프론트한테 설명해주기)
-    @PostMapping("user/send")
-    public void test(@RequestBody FcmRequest request) throws IOException, FirebaseMessagingException {
-        fcmService.sendMessageTo(request.getTopic(), request.getTitle(), request.getBody());
-    }
+//    @PostMapping("user/send")
+//    public void test(@RequestBody FcmRequest request) throws IOException, FirebaseMessagingException {
+//        fcmService.sendMessageTo(request.getTopic(), request.getTitle(), request.getBody());
+//    }
 
 
 

@@ -1,5 +1,6 @@
 package likelion.hamahama.coupon.controller;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import likelion.hamahama.comment.entity.Comment;
 import likelion.hamahama.comment.service.CommentService;
 import likelion.hamahama.common.CreateResponseMessage;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +57,7 @@ public class CouponController {
 
     // 쿠폰 등록 (성공)
     @PostMapping("/coupon/create")
-    public void addCoupon(@RequestBody CouponDetailDto theCoupon) {
+    public void addCoupon(@RequestBody CouponDetailDto theCoupon) throws IOException, FirebaseMessagingException {
         couponService.saveCoupon(theCoupon);
     }
 
