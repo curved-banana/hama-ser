@@ -60,7 +60,7 @@ public class KakaoLoginService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=f26e0636a3b7f31a8acf97ee86964823"); // TODO REST_API_KEY 입력
-            sb.append("&redirect_uri=http://localhost:8088/api/login/oauth2/code/kakao"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append("&redirect_uri=http://ec2-43-202-132-83.ap-northeast-2.compute.amazonaws.com:8088/api/login/oauth2/code/kakao"); // TODO 인가코드 받은 redirect_uri 입력
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
