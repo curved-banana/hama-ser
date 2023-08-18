@@ -58,7 +58,7 @@ spring:
             client-id : f26e0636a3b7f31a8acf97ee86964823
             client-name : Kakao
             client-authentication-method: POST
-            redirect-uri: https://43.202.132.83:8088/api/login/oauth2/code/kakao
+            redirect-uri: http://ec2-43-202-132-83.ap-northeast-2.compute.amazonaws.com:8088/api/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             scope:
               - profile_nickname
