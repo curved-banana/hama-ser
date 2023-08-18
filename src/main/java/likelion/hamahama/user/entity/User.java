@@ -14,12 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Data
 @DynamicUpdate
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name="user_table")
 public class User extends BaseTimeEntity {
 
